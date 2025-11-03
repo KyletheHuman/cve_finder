@@ -2,6 +2,7 @@
 #include <string>
 #include <queue>
 #include "trie.h"
+#include "cve_data.h"
 using namespace std;
 
 Trie::Trie() {
