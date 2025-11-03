@@ -1,14 +1,14 @@
 #include <vector>
-
+#pragma once
 using namespace std;
 struct TrieNode {
-    bool isWord;
+    bool isLeaf;
     char character;
 
     vector<TrieNode*> children;
 
     TrieNode(char character=' ') {
-        isWord = false;
+        isLeaf = false;
         this->character = character;
     }
 };

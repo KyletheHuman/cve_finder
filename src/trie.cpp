@@ -42,7 +42,7 @@ void Trie::insert(string& word) {
             } 
         }
     }
-    current->isWord = true;
+    current->isLeaf = true;
 }
 
 
@@ -54,7 +54,7 @@ bool Trie::search(string& word) {
             if (current->children[i]->character != c) {
                 return false;
             }
-            //does exists, continue to next letter
+            //does exist, continue to next letter
             current = current->children[i];
         }
     }
