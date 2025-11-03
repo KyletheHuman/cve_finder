@@ -12,13 +12,19 @@ FetchContent_Declare(
 )
 FetchContent_MakeAvailable(json)
 
-# find libcurl package
+# find libcurl download package
 find_package(CURL REQUIRED)
 
+#find zlib for decompression
+find_package(ZLIB REQUIRED)
+
+#build main program
 add_executable(cve_finder src/main.cpp)
 
-# link project with JSON library and libcurl tool
+# link project with JSON library and libcurl tool and zlib
 target_link_libraries(cve_finder PRIVATE
     nlohmann_json::nlohmann_json
     CURL::libcurl
+    ZLIB::ZLIB
 )
+
