@@ -2,7 +2,7 @@
 #include <string>
 using namespace std;
 
-struct CveData {
+struct CVEData {
     string id;
     string description;
     string vendor;

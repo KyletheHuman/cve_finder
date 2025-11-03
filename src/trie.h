@@ -1,4 +1,5 @@
 #include <vector>
+#include "cve_data.h"
 #pragma once
 using namespace std;
 struct TrieNode {
