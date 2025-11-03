@@ -1,16 +1,23 @@
 #include <vector>
+#include <iostream>
 #include "cve_data.h"
 #pragma once
 using namespace std;
 struct TrieNode {
     bool isLeaf;
     char character;
+    CPEData* data;
 
     vector<TrieNode*> children;
 
-    TrieNode(char character=' ') {
+    TrieNode(char character='*') {
         isLeaf = false;
+        data = nullptr;
         this->character = character;
+    }
+
+    void printData() {
+        data->print();
     }
 };
 
@@ -21,6 +28,8 @@ class Trie {
     Trie();
     ~Trie();
 
-    void insert(string& word);
-    bool search(string& word);
+    TrieNode* findChild(TrieNode* node, char c);
+    void insert(string& cpeName, CVEData* data);
+    CPEData* search(string& word);
+    void Trie::print(TrieNode* node = nullptr, string prefix = "");
 };

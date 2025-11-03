@@ -22,45 +22,66 @@ Trie::~Trie() {
 
 }
 
-void Trie::insert(string& word) {
+//helper for insert, checks if c is a node's child
+TrieNode* Trie::findChild(TrieNode* node, char c) {
+    for (TrieNode* child : node->children) {
+        if (child->character == c) {
+            return child;
+        }
+    }
+    return nullptr;
+}
+
+void Trie::insert(string& cpeName, CVEData* data) {
     //insert a word into the trie
     TrieNode* current = root;
-    bool found;
-    for (char c : word) {
-        //search until the current node doesn't have the next letter as a child
-        found = false;
-        for (int i=0; i < current->children.size(); i++) {
-            if (current->children[i]->character == c) {
-                found = true;
-            }
-            if (found) {
-                current = current->children[i];
-            }
-            else {
-                //create the new node with the character that wasn't found
-                TrieNode* newNode = new TrieNode(c);
-                current->children.push_back(newNode);
-            } 
+    for (char c : cpeName) {
+        TrieNode* child = findChild(current, c);
+        if (child == nullptr) {
+            TrieNode* newNode = new TrieNode(c);
+            current->children.push_back(newNode);
+            current = newNode;
+        }
+        else {
+            current = child;
         }
     }
     current->isLeaf = true;
+    if (!current->data) {
+            current->data = new CPEData();
+            current->data->cpeName = cpeName;
+        }
+        current->data->cves.push_back(data);
 }
 
 
-bool Trie::search(string& word) {
+CPEData* Trie::search(string& name) {
     TrieNode* current = root;
-    for (char c : word) {
-        for (int i=0; i < current->children.size(); i++) {
-            //character isn't in the trie, so doesn't exist
-            if (current->children[i]->character != c) {
-                return false;
-            }
-            //does exist, continue to next letter
-            current = current->children[i];
+    for (char c : name) {
+        TrieNode* child = findChild(current, c);
+        if (child == nullptr) {
+            return nullptr;
         }
+        current = child;
     }
-    //if it makes it here then the word is in it
-    return true;
+    if (current->isLeaf) {
+        return current->data;
+    }
+    return nullptr;
+}
+
+void Trie::print(TrieNode* node = nullptr, string prefix = "") {
+    if (!node) {
+        node = root;
+    }
+
+    if (node->isLeaf && node->data) {
+        node->data->print();
+    }
+
+    for (TrieNode* child : node->children) {
+        print(child, prefix + child->character);
+    }
 }
 
 
