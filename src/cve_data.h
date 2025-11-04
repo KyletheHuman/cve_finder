@@ -1,6 +1,8 @@
+#ifndef CVE_DATA_H
+#define CVE_DATA_H
+#include <iostream>
 #include <string>
 #include <vector>
-#pragma once
 using namespace std;
 
 struct CVEData {
@@ -26,3 +28,6 @@ struct CPEData {
         }
     }
 };
+
+
+#endif
