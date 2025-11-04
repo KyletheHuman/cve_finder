@@ -1,7 +1,7 @@
 #include <iostream>
 #include <string> //just in case
 
-struct CVEstuct {
+struct CVEstruct {
   string id;
   string description;
   double cvss3score;
