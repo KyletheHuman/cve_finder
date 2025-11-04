@@ -18,7 +18,7 @@ using namespace std;
   //save
 vector<CVEstruct> loadData() {
   vector<CVEstruct> cves;
-  string dataPath = "data/cves_data.json";
+  string dataPath = "data/cve_data.json";
   if (!checkFile(dataPath)) {
     cout << "No current CVE data, please update" << endl;
     return cves;
@@ -83,8 +83,57 @@ bool decompressFile(const string &gzipPath, const string &outPath) {
   cout << "Decompressed gzip file" << endl;
   return true;
 }
-vector<CVEstruct> parseJson(const string &jsonPath);
-void saveData(const vector<CVEstruct> &cves, const string &outPath);
+
+
+vector<CVEstruct> parseJson(const string &jsonPath) { //individual json files
+  vector<CVEstruct> cves;
+  ifstream jsonFile(jsonPath);
+
+  json data;
+  jsonFile >> data;
+  jsonFile.close();
+
+  for (auto &cveJson : data["CVE_Items"]) {
+    CVEstruct cve;
+    cve.id = cveJson["cve"]["CVE_data_meta"].value("ID", "temp");
+    if (cveJson["cve"]["description"].contains("description_data")) {
+      for (auto &description : cveJson["cve"]["description"]["description_data"]) {
+        if (description.value("lang", "") == "en") {
+          cve.description = description.value("value", "temp");
+          break;
+        }
+      }
+    }
+    if (item.contains("impact") && cveJson["impact"].contains("baseMetricV3")) {
+      cve.cvss3score = cveJson["impact"]["baseMetricV3"]["cvssV3"].value("baseScore", -1.0);
+    } else {
+      cve.cvss3score = -1.0; 
+    }
+    cve.productversion = "temp"; //why not parse now?
+    cves.push_back(cve);
+  }
+  
+  cout << "Parsed: Complete" << endl;
+  return cves;
+}
+
+
+void saveData(const vector<CVEstruct> &cves, const string &outPath) {
+  json combinedJson;
+  for (const auto &cve : cves) {
+    combinedJson.push_back({
+      {"id", cve.id},
+      {"description", cve.description},
+      {"cvss3score", cve.cvss3score},
+      {"productversion", cve.productversion}
+      });
+  }
+
+  ofstream outFile(outPath);
+  outFile << combinedJson.dump(4); //dumps and makes readable
+  outFile.close();
+  cout << "Data Saving: Complete";
+}
 
 
 void updateData() {
