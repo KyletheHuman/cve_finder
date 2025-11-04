@@ -1,5 +1,5 @@
 #include <iostream>
-#include <filesystem>
+// #include <filesystem>
 #include <fstream>
 #include <curl/curl.h>
 #include <zlib.h>
@@ -104,7 +104,7 @@ vector<CVEstruct> parseJson(const string &jsonPath) { //individual json files
         }
       }
     }
-    if (item.contains("impact") && cveJson["impact"].contains("baseMetricV3")) {
+    if (cveJson.contains("impact") && cveJson["impact"].contains("baseMetricV3")) {
       cve.cvss3score = cveJson["impact"]["baseMetricV3"]["cvssV3"].value("baseScore", -1.0);
     } else {
       cve.cvss3score = -1.0; 
@@ -137,7 +137,7 @@ void saveData(const vector<CVEstruct> &cves, const string &outPath) {
 
 
 void updateData() {
-  filesystem::create_directories("data");
+  // filesystem::create_directories("data");
   vector<CVEstruct> cves;
 
   for (int year = 2010; year < 2026; ++year) {
