@@ -18,7 +18,7 @@ int main (int argc, char* argv[]) {
     getline(cin, command);
     command = cleanInput(command);
     
-    if (command = "exit") {
+    if (command == "exit") {
       break;
       
     } else if (command == "update") {
@@ -26,7 +26,7 @@ int main (int argc, char* argv[]) {
       updateData();
       cves = loadData();
       
-    } else if (command = "load") {
+    } else if (command == "load") {
       cout << "Loading CVE data" << endl;
       cves = loadData();
       if (cves.empty()) {
