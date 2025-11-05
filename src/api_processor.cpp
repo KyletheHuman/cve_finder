@@ -96,6 +96,7 @@ vector<CVEstruct> parseJson(const string &jsonPath) { //individual json files
   for (auto &cveJson : data["CVE_Items"]) {
     CVEstruct cve;
     cve.id = cveJson["cve"]["CVE_data_meta"].value("ID", "temp");
+    
     if (cveJson["cve"]["description"].contains("description_data")) {
       for (auto &description : cveJson["cve"]["description"]["description_data"]) {
         if (description.value("lang", "") == "en") {
@@ -104,15 +105,50 @@ vector<CVEstruct> parseJson(const string &jsonPath) { //individual json files
         }
       }
     }
+    
     if (cveJson.contains("impact") && cveJson["impact"].contains("baseMetricV3")) {
       cve.cvss3score = cveJson["impact"]["baseMetricV3"]["cvssV3"].value("baseScore", -1.0);
     } else {
       cve.cvss3score = -1.0; 
     }
-    cve.productversion = "temp"; //why not parse now?
+
+    cve.vendor = "any";
+    cve.product = "none";
+    cve.version = "any";
+
+    //nvd stores software under configurations -> nodes -> cpe_match as cpe:2.3:a:microsoft:minecraft:1.7.2:*:*...
+    if (cveJson.contains("configurations") && cveJson["configurations"].contains("nodes")) {
+      for (const auto &node : cveJson["configurations"]["nodes"]) {
+        if (node.contains("cpe_match")) {
+          for (const auto &cpe : node["cpe_match"]) {
+            if (cpe.contains("cpe23Uri")) {
+              
+              string cpeEntry = cpe["cpe23Uri"];
+              vector<string> cpeFields;
+              string temp;
+              for (char letter : cpeEntry) {
+                if (letter == ':') {
+                  cpeFields.push_back(temp);
+                  temp.clear();
+                } else {
+                  temp += letter;
+                }
+              }
+              
+              cpeFields.push_back(temp);
+              if (cpeFields.size() >= 6) { //makes sure has all fields
+                cve.vendor = cleanInput(cpeFields[3]);
+                cve.product = cleanInput(cpeFields[4]);
+                cve.version = cleanInput(cpeFields[5]);
+              }
+              break;
+            }
+          }
+        }
+      }
+    }
     cves.push_back(cve);
   }
-  
   cout << "Parsed: Complete" << endl;
   return cves;
 }
