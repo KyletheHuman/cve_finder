@@ -3,6 +3,7 @@
 #include <iostream>
 #include <string>
 #include <vector>
+#include "cve_struct.h"
 using namespace std;
 
 struct CVEData {
@@ -20,10 +21,10 @@ struct CVEData {
 
 struct CPEData {
     string cpeName;
-    vector<CVEData*> cves;
+    vector<CVEstruct*> cves;
 
     void print() {
-        for (CVEData* cve : cves) {
+        for (CVEstruct* cve : cves) {
             cve->print();
         }
     }

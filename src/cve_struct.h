@@ -6,4 +6,9 @@ struct CVEstruct {
   string description;
   double cvss3score;
   string productversion;
+
+  void print() {
+        cout << "ID: " << id << endl;
+        cout << "Description: " << description << endl;
+    }
 };

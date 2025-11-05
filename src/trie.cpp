@@ -32,7 +32,7 @@ TrieNode* Trie::findChild(TrieNode* node, char c) {
     return nullptr;
 }
 
-void Trie::insert(string& cpeName, CVEData* data) {
+void Trie::insert(string& cpeName, CVEstruct* data) {
     //insert a word into the trie
     TrieNode* current = root;
     for (char c : cpeName) {

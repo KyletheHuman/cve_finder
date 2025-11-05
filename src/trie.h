@@ -29,7 +29,7 @@ class Trie {
     ~Trie();
 
     TrieNode* findChild(TrieNode* node, char c);
-    void insert(string& cpeName, CVEData* data);
+    void insert(string& cpeName, CVEstruct* data);
     CPEData* search(string& word);
     void Trie::print(TrieNode* node = nullptr, string prefix = "");
 };
