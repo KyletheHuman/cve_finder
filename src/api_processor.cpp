@@ -34,7 +34,9 @@ vector<CVEstruct> loadData() {
     cveEntry.id = cveJson.value("id", "temp");
     cveEntry.description = cveJson.value("description", "temp");
     cveEntry.cvss3score = cveJson.value("cvss3score", -1.0);
-    cveEntry.productversion = cveJson.value("productversion", "temp");
+    cveEntry.vendor = cveJson.value("vendor", "any");
+    cveEntry.product = cveJson.value("product", "none");
+    cveEntry.version = cveJson.value("version", "any");
     cves.push_back(cveEntry);
   }
 
@@ -161,7 +163,9 @@ void saveData(const vector<CVEstruct> &cves, const string &outPath) {
       {"id", cve.id},
       {"description", cve.description},
       {"cvss3score", cve.cvss3score},
-      {"productversion", cve.productversion}
+      {"vendor", cve.vendor},
+      {"product", cve.product},
+      {"version", cve.version}
       });
   }
 
@@ -176,6 +180,9 @@ void updateData() {
   // filesystem::create_directories("data");
   vector<CVEstruct> cves;
 
+  curl_global_init(CURL_GLOBAL_DEFAULT);
+  curl_global_cleanup();
+  
   for (int year = 2010; year < 2026; ++year) {
     string url = "https://nvd.nist.gov/feeds/json/cve/1.1/nvdcve-1.1-" + to_string(year) + ".json.gz"; //web download path
     string gzipPath = "data/nvdcve-1.1-" + to_string(year) + ".json.gz"; //local file path
