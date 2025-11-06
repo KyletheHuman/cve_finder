@@ -6,6 +6,10 @@
 
 using namespace std;
 
+string formatCPE(string vendor, string product, string version) {
+    return vendor + "-" + product + "-" + version;
+}
+
 // yoink mass data dumps for each year of cve's:
 //cURL all of NVD's API feeds from each year as .gz compressed files
 //decompress into normal json
@@ -42,9 +46,45 @@ void main() {
     //loop until end
     while (true) {
         //set mode to tree or trie
+        string mode;
+        cout << "Enter the mode (tree or trie): ";
+        cin >> mode;
+        cout << endl;
+
         //get input for vendor, product, and version
+        string vendor, product, version;
+        cout << "Enter the software's vendor: ";
+        cin >> vendor;
+        cout << "Enter the software's product: ";
+        cin >> product;
+        cout << "Enter the software's version: ";
+        cin >> version;
+
         //prompt for action
-        break;
+        string choice;
+        cout << "What would you like to do (search, update, exit)? ";
+        cin >> choice;
+        
+        if (choice == "search") {
+            if (mode == "trie") {
+                string cpe = formatCPE(vendor, product, version);
+                CPEData* result = trie.search(cpe);
+
+                for (CVEstruct* cve : result->cves) {
+                    cve->print();
+                }
+            }
+            //TODO:: Tree
+        }
+        else if (choice == "update") {
+            updateData();
+        }
+        else if (choice == "exit") {
+            break;
+        }
+        else {
+            cout << "Error: choice not recognized." << endl;
+        }
     }
 
 }
