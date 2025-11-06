@@ -2,6 +2,7 @@
 // #include <filesystem>
 #include <fstream>
 #include <curl/curl.h>
+#include <vector>
 #include <zlib.h>
 #include "file_checker.h"
 #include "data_processor.h"

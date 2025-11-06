@@ -148,12 +148,12 @@ int main (int argc, char* argv[]) {
       auto startTimeTrie = chrono::high_resolution_clock::now();
       //insert into trie
       auto endTimeTrie = chrono::high_resolution_clock::now();
-      auto durationTrie = chrono::duration_cast<chrono::milliseconds>(endTrie - startTrie).count();
+      auto durationTrie = chrono::duration_cast<chrono::milliseconds>(endTimeTrie - startTimeTrie).count();
 
       auto startTimeRB = chrono::high_resolution_clock::now();
       //insert into red-black
       auto endTimeRB = chrono::high_resolution_clock::now();
-      auto durationRB = chrono::duration_cast<chrono::milliseconds>(endRB - startRB).count();  
+      auto durationRB = chrono::duration_cast<chrono::milliseconds>(endTimeRB - startTimeRB).count();  
 
       if (count == 0) {
         cout << "No matching CVEs found" << endl;
