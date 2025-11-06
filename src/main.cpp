@@ -31,10 +31,20 @@ void main() {
     }
 
     Trie trie;
+    //Tree tree;
     for (CVEstruct cve : data) {
         string cpe = cve.cpe();
         trie.insert(cpe, &cve);
         //TODO: INSERT INTO TREE
+    }
+
+
+    //loop until end
+    while (true) {
+        //set mode to tree or trie
+        //get input for vendor, product, and version
+        //prompt for action
+        break;
     }
 
 }
