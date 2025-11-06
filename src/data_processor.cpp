@@ -119,9 +119,9 @@ vector<CVEstruct> parseJson(const string &jsonPath) { //individual json files
       cve.cvss3score = -1.0; 
     }
 
-    cve.vendor = "any";
-    cve.product = "none";
-    cve.version = "any";
+    cve.vendor = "";
+    cve.product = "";
+    cve.version = "";
 
     //nvd stores software under configurations -> nodes -> cpe_match as cpe:2.3:a:microsoft:minecraft:1.7.2:*:*...
     if (cveJson.contains("configurations") && cveJson["configurations"].contains("nodes")) {
@@ -147,6 +147,12 @@ vector<CVEstruct> parseJson(const string &jsonPath) { //individual json files
                 cve.vendor = cleanInput(cpeFields[3]);
                 cve.product = cleanInput(cpeFields[4]);
                 cve.version = cleanInput(cpeFields[5]);
+                if (cve.vendor == "*" || cve.vendor == "-") {
+                  cve.vendor = "";
+                }
+                if (cve.version == "*" || cve.version == "-") {
+                  cve.version = "";
+                }
               }
               break;
             }
