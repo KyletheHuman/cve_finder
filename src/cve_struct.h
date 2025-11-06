@@ -15,4 +15,8 @@ struct CVEstruct {
         cout << "CVSS3.0 score: " << cvss3score << endl;
         cout << "Description: " << description << endl;
     }
+
+  string cpe() {
+    return vendor + "-" + product + "-" + version;
+  }
 };

@@ -32,8 +32,8 @@ void main() {
 
     Trie trie;
     for (CVEstruct cve : data) {
-        string cpeName = cve.vendor + "-" + cve.product + "-" + cve.version;
-        trie.insert(cpeName, &cve);
+        string cpe = cve.cpe();
+        trie.insert(cpe, &cve);
         //TODO: INSERT INTO TREE
     }
 
