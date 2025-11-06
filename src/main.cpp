@@ -56,10 +56,6 @@ void main() {
         cout << "What would you like to do (search, update, exit)? ";
         cin >> choice;
 
-        
-
-        
-        
         if (choice == "search") {
             //get input for vendor, product, and version
             string vendor, product, version;

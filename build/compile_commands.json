@@ -1,0 +1,26 @@
+[
+{
+  "directory": "C:/Users/kyleg/UF/cve_finder/build",
+  "command": "C:\\mingw64\\bin\\g++.exe  @CMakeFiles/cve_finder.dir/includes_CXX.rsp -g -std=gnu++1z -o CMakeFiles\\cve_finder.dir\\src\\main.cpp.obj -c C:\\Users\\kyleg\\UF\\cve_finder\\src\\main.cpp",
+  "file": "C:/Users/kyleg/UF/cve_finder/src/main.cpp",
+  "output": "CMakeFiles/cve_finder.dir/src/main.cpp.obj"
+},
+{
+  "directory": "C:/Users/kyleg/UF/cve_finder/build",
+  "command": "C:\\mingw64\\bin\\g++.exe  @CMakeFiles/cve_finder.dir/includes_CXX.rsp -g -std=gnu++1z -o CMakeFiles\\cve_finder.dir\\src\\Trie.cpp.obj -c C:\\Users\\kyleg\\UF\\cve_finder\\src\\Trie.cpp",
+  "file": "C:/Users/kyleg/UF/cve_finder/src/Trie.cpp",
+  "output": "CMakeFiles/cve_finder.dir/src/Trie.cpp.obj"
+},
+{
+  "directory": "C:/Users/kyleg/UF/cve_finder/build",
+  "command": "C:\\mingw64\\bin\\g++.exe  @CMakeFiles/cve_finder.dir/includes_CXX.rsp -g -std=gnu++1z -o CMakeFiles\\cve_finder.dir\\src\\api_processor.cpp.obj -c C:\\Users\\kyleg\\UF\\cve_finder\\src\\api_processor.cpp",
+  "file": "C:/Users/kyleg/UF/cve_finder/src/api_processor.cpp",
+  "output": "CMakeFiles/cve_finder.dir/src/api_processor.cpp.obj"
+},
+{
+  "directory": "C:/Users/kyleg/UF/cve_finder/build",
+  "command": "C:\\mingw64\\bin\\g++.exe  @CMakeFiles/cve_finder.dir/includes_CXX.rsp -g -std=gnu++1z -o CMakeFiles\\cve_finder.dir\\src\\file_checker.cpp.obj -c C:\\Users\\kyleg\\UF\\cve_finder\\src\\file_checker.cpp",
+  "file": "C:/Users/kyleg/UF/cve_finder/src/file_checker.cpp",
+  "output": "CMakeFiles/cve_finder.dir/src/file_checker.cpp.obj"
+}
+]

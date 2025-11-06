@@ -1,7 +1,8 @@
 {
 	"InstallScripts" : 
 	[
-		"C:/Users/kyleg/UF/cve_finder/build/cmake_install.cmake"
+		"C:/Users/kyleg/UF/cve_finder/build/cmake_install.cmake",
+		"C:/Users/kyleg/UF/cve_finder/build/_deps/json-build/cmake_install.cmake"
 	],
 	"Parallel" : false
 }

@@ -115,6 +115,115 @@ depend:
 	$(CMAKE_COMMAND) -S$(CMAKE_SOURCE_DIR) -B$(CMAKE_BINARY_DIR) --check-build-system CMakeFiles\Makefile.cmake 1
 .PHONY : depend
 
+#=============================================================================
+# Target rules for targets named cve_finder
+
+# Build rule for target.
+cve_finder: cmake_check_build_system
+	$(MAKE) $(MAKESILENT) -f CMakeFiles\Makefile2 cve_finder
+.PHONY : cve_finder
+
+# fast build rule for target.
+cve_finder/fast:
+	$(MAKE) $(MAKESILENT) -f CMakeFiles\cve_finder.dir\build.make CMakeFiles/cve_finder.dir/build
+.PHONY : cve_finder/fast
+
+src/Trie.obj: src/Trie.cpp.obj
+.PHONY : src/Trie.obj
+
+# target to build an object file
+src/Trie.cpp.obj:
+	$(MAKE) $(MAKESILENT) -f CMakeFiles\cve_finder.dir\build.make CMakeFiles/cve_finder.dir/src/Trie.cpp.obj
+.PHONY : src/Trie.cpp.obj
+
+src/Trie.i: src/Trie.cpp.i
+.PHONY : src/Trie.i
+
+# target to preprocess a source file
+src/Trie.cpp.i:
+	$(MAKE) $(MAKESILENT) -f CMakeFiles\cve_finder.dir\build.make CMakeFiles/cve_finder.dir/src/Trie.cpp.i
+.PHONY : src/Trie.cpp.i
+
+src/Trie.s: src/Trie.cpp.s
+.PHONY : src/Trie.s
+
+# target to generate assembly for a file
+src/Trie.cpp.s:
+	$(MAKE) $(MAKESILENT) -f CMakeFiles\cve_finder.dir\build.make CMakeFiles/cve_finder.dir/src/Trie.cpp.s
+.PHONY : src/Trie.cpp.s
+
+src/api_processor.obj: src/api_processor.cpp.obj
+.PHONY : src/api_processor.obj
+
+# target to build an object file
+src/api_processor.cpp.obj:
+	$(MAKE) $(MAKESILENT) -f CMakeFiles\cve_finder.dir\build.make CMakeFiles/cve_finder.dir/src/api_processor.cpp.obj
+.PHONY : src/api_processor.cpp.obj
+
+src/api_processor.i: src/api_processor.cpp.i
+.PHONY : src/api_processor.i
+
+# target to preprocess a source file
+src/api_processor.cpp.i:
+	$(MAKE) $(MAKESILENT) -f CMakeFiles\cve_finder.dir\build.make CMakeFiles/cve_finder.dir/src/api_processor.cpp.i
+.PHONY : src/api_processor.cpp.i
+
+src/api_processor.s: src/api_processor.cpp.s
+.PHONY : src/api_processor.s
+
+# target to generate assembly for a file
+src/api_processor.cpp.s:
+	$(MAKE) $(MAKESILENT) -f CMakeFiles\cve_finder.dir\build.make CMakeFiles/cve_finder.dir/src/api_processor.cpp.s
+.PHONY : src/api_processor.cpp.s
+
+src/file_checker.obj: src/file_checker.cpp.obj
+.PHONY : src/file_checker.obj
+
+# target to build an object file
+src/file_checker.cpp.obj:
+	$(MAKE) $(MAKESILENT) -f CMakeFiles\cve_finder.dir\build.make CMakeFiles/cve_finder.dir/src/file_checker.cpp.obj
+.PHONY : src/file_checker.cpp.obj
+
+src/file_checker.i: src/file_checker.cpp.i
+.PHONY : src/file_checker.i
+
+# target to preprocess a source file
+src/file_checker.cpp.i:
+	$(MAKE) $(MAKESILENT) -f CMakeFiles\cve_finder.dir\build.make CMakeFiles/cve_finder.dir/src/file_checker.cpp.i
+.PHONY : src/file_checker.cpp.i
+
+src/file_checker.s: src/file_checker.cpp.s
+.PHONY : src/file_checker.s
+
+# target to generate assembly for a file
+src/file_checker.cpp.s:
+	$(MAKE) $(MAKESILENT) -f CMakeFiles\cve_finder.dir\build.make CMakeFiles/cve_finder.dir/src/file_checker.cpp.s
+.PHONY : src/file_checker.cpp.s
+
+src/main.obj: src/main.cpp.obj
+.PHONY : src/main.obj
+
+# target to build an object file
+src/main.cpp.obj:
+	$(MAKE) $(MAKESILENT) -f CMakeFiles\cve_finder.dir\build.make CMakeFiles/cve_finder.dir/src/main.cpp.obj
+.PHONY : src/main.cpp.obj
+
+src/main.i: src/main.cpp.i
+.PHONY : src/main.i
+
+# target to preprocess a source file
+src/main.cpp.i:
+	$(MAKE) $(MAKESILENT) -f CMakeFiles\cve_finder.dir\build.make CMakeFiles/cve_finder.dir/src/main.cpp.i
+.PHONY : src/main.cpp.i
+
+src/main.s: src/main.cpp.s
+.PHONY : src/main.s
+
+# target to generate assembly for a file
+src/main.cpp.s:
+	$(MAKE) $(MAKESILENT) -f CMakeFiles\cve_finder.dir\build.make CMakeFiles/cve_finder.dir/src/main.cpp.s
+.PHONY : src/main.cpp.s
+
 # Help Target
 help:
 	@echo The following are some of the valid targets for this Makefile:
@@ -123,6 +232,19 @@ help:
 	@echo ... depend
 	@echo ... edit_cache
 	@echo ... rebuild_cache
+	@echo ... cve_finder
+	@echo ... src/Trie.obj
+	@echo ... src/Trie.i
+	@echo ... src/Trie.s
+	@echo ... src/api_processor.obj
+	@echo ... src/api_processor.i
+	@echo ... src/api_processor.s
+	@echo ... src/file_checker.obj
+	@echo ... src/file_checker.i
+	@echo ... src/file_checker.s
+	@echo ... src/main.obj
+	@echo ... src/main.i
+	@echo ... src/main.s
 .PHONY : help
 
 

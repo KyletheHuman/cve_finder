@@ -1,2 +1,5 @@
+C:/Users/kyleg/UF/cve_finder/build/CMakeFiles/cve_finder.dir
 C:/Users/kyleg/UF/cve_finder/build/CMakeFiles/edit_cache.dir
 C:/Users/kyleg/UF/cve_finder/build/CMakeFiles/rebuild_cache.dir
+C:/Users/kyleg/UF/cve_finder/build/_deps/json-build/CMakeFiles/edit_cache.dir
+C:/Users/kyleg/UF/cve_finder/build/_deps/json-build/CMakeFiles/rebuild_cache.dir
