@@ -1,8 +1,8 @@
 file(REMOVE_RECURSE
   "CMakeFiles/cve_finder.dir/src/Trie.cpp.obj"
   "CMakeFiles/cve_finder.dir/src/Trie.cpp.obj.d"
-  "CMakeFiles/cve_finder.dir/src/api_processor.cpp.obj"
-  "CMakeFiles/cve_finder.dir/src/api_processor.cpp.obj.d"
+  "CMakeFiles/cve_finder.dir/src/data_processor.cpp.obj"
+  "CMakeFiles/cve_finder.dir/src/data_processor.cpp.obj.d"
   "CMakeFiles/cve_finder.dir/src/file_checker.cpp.obj"
   "CMakeFiles/cve_finder.dir/src/file_checker.cpp.obj.d"
   "CMakeFiles/cve_finder.dir/src/main.cpp.obj"

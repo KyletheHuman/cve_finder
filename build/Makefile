@@ -152,29 +152,29 @@ src/Trie.cpp.s:
 	$(MAKE) $(MAKESILENT) -f CMakeFiles\cve_finder.dir\build.make CMakeFiles/cve_finder.dir/src/Trie.cpp.s
 .PHONY : src/Trie.cpp.s
 
-src/api_processor.obj: src/api_processor.cpp.obj
-.PHONY : src/api_processor.obj
+src/data_processor.obj: src/data_processor.cpp.obj
+.PHONY : src/data_processor.obj
 
 # target to build an object file
-src/api_processor.cpp.obj:
-	$(MAKE) $(MAKESILENT) -f CMakeFiles\cve_finder.dir\build.make CMakeFiles/cve_finder.dir/src/api_processor.cpp.obj
-.PHONY : src/api_processor.cpp.obj
+src/data_processor.cpp.obj:
+	$(MAKE) $(MAKESILENT) -f CMakeFiles\cve_finder.dir\build.make CMakeFiles/cve_finder.dir/src/data_processor.cpp.obj
+.PHONY : src/data_processor.cpp.obj
 
-src/api_processor.i: src/api_processor.cpp.i
-.PHONY : src/api_processor.i
+src/data_processor.i: src/data_processor.cpp.i
+.PHONY : src/data_processor.i
 
 # target to preprocess a source file
-src/api_processor.cpp.i:
-	$(MAKE) $(MAKESILENT) -f CMakeFiles\cve_finder.dir\build.make CMakeFiles/cve_finder.dir/src/api_processor.cpp.i
-.PHONY : src/api_processor.cpp.i
+src/data_processor.cpp.i:
+	$(MAKE) $(MAKESILENT) -f CMakeFiles\cve_finder.dir\build.make CMakeFiles/cve_finder.dir/src/data_processor.cpp.i
+.PHONY : src/data_processor.cpp.i
 
-src/api_processor.s: src/api_processor.cpp.s
-.PHONY : src/api_processor.s
+src/data_processor.s: src/data_processor.cpp.s
+.PHONY : src/data_processor.s
 
 # target to generate assembly for a file
-src/api_processor.cpp.s:
-	$(MAKE) $(MAKESILENT) -f CMakeFiles\cve_finder.dir\build.make CMakeFiles/cve_finder.dir/src/api_processor.cpp.s
-.PHONY : src/api_processor.cpp.s
+src/data_processor.cpp.s:
+	$(MAKE) $(MAKESILENT) -f CMakeFiles\cve_finder.dir\build.make CMakeFiles/cve_finder.dir/src/data_processor.cpp.s
+.PHONY : src/data_processor.cpp.s
 
 src/file_checker.obj: src/file_checker.cpp.obj
 .PHONY : src/file_checker.obj
@@ -236,9 +236,9 @@ help:
 	@echo ... src/Trie.obj
 	@echo ... src/Trie.i
 	@echo ... src/Trie.s
-	@echo ... src/api_processor.obj
-	@echo ... src/api_processor.i
-	@echo ... src/api_processor.s
+	@echo ... src/data_processor.obj
+	@echo ... src/data_processor.i
+	@echo ... src/data_processor.s
 	@echo ... src/file_checker.obj
 	@echo ... src/file_checker.i
 	@echo ... src/file_checker.s

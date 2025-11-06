@@ -101,20 +101,20 @@ CMakeFiles/cve_finder.dir/src/Trie.cpp.s: cmake_force
 	@$(CMAKE_COMMAND) -E cmake_echo_color "--switch=$(COLOR)" --green "Compiling CXX source to assembly CMakeFiles/cve_finder.dir/src/Trie.cpp.s"
 	C:\mingw64\bin\g++.exe $(CXX_DEFINES) $(CXX_INCLUDES) $(CXX_FLAGS) -S C:\Users\kyleg\UF\cve_finder\src\Trie.cpp -o CMakeFiles\cve_finder.dir\src\Trie.cpp.s
 
-CMakeFiles/cve_finder.dir/src/api_processor.cpp.obj: CMakeFiles/cve_finder.dir/flags.make
-CMakeFiles/cve_finder.dir/src/api_processor.cpp.obj: CMakeFiles/cve_finder.dir/includes_CXX.rsp
-CMakeFiles/cve_finder.dir/src/api_processor.cpp.obj: C:/Users/kyleg/UF/cve_finder/src/api_processor.cpp
-CMakeFiles/cve_finder.dir/src/api_processor.cpp.obj: CMakeFiles/cve_finder.dir/compiler_depend.ts
-	@$(CMAKE_COMMAND) -E cmake_echo_color "--switch=$(COLOR)" --green --progress-dir=C:\Users\kyleg\UF\cve_finder\build\CMakeFiles --progress-num=$(CMAKE_PROGRESS_3) "Building CXX object CMakeFiles/cve_finder.dir/src/api_processor.cpp.obj"
-	C:\mingw64\bin\g++.exe $(CXX_DEFINES) $(CXX_INCLUDES) $(CXX_FLAGS) -MD -MT CMakeFiles/cve_finder.dir/src/api_processor.cpp.obj -MF CMakeFiles\cve_finder.dir\src\api_processor.cpp.obj.d -o CMakeFiles\cve_finder.dir\src\api_processor.cpp.obj -c C:\Users\kyleg\UF\cve_finder\src\api_processor.cpp
+CMakeFiles/cve_finder.dir/src/data_processor.cpp.obj: CMakeFiles/cve_finder.dir/flags.make
+CMakeFiles/cve_finder.dir/src/data_processor.cpp.obj: CMakeFiles/cve_finder.dir/includes_CXX.rsp
+CMakeFiles/cve_finder.dir/src/data_processor.cpp.obj: C:/Users/kyleg/UF/cve_finder/src/data_processor.cpp
+CMakeFiles/cve_finder.dir/src/data_processor.cpp.obj: CMakeFiles/cve_finder.dir/compiler_depend.ts
+	@$(CMAKE_COMMAND) -E cmake_echo_color "--switch=$(COLOR)" --green --progress-dir=C:\Users\kyleg\UF\cve_finder\build\CMakeFiles --progress-num=$(CMAKE_PROGRESS_3) "Building CXX object CMakeFiles/cve_finder.dir/src/data_processor.cpp.obj"
+	C:\mingw64\bin\g++.exe $(CXX_DEFINES) $(CXX_INCLUDES) $(CXX_FLAGS) -MD -MT CMakeFiles/cve_finder.dir/src/data_processor.cpp.obj -MF CMakeFiles\cve_finder.dir\src\data_processor.cpp.obj.d -o CMakeFiles\cve_finder.dir\src\data_processor.cpp.obj -c C:\Users\kyleg\UF\cve_finder\src\data_processor.cpp
 
-CMakeFiles/cve_finder.dir/src/api_processor.cpp.i: cmake_force
-	@$(CMAKE_COMMAND) -E cmake_echo_color "--switch=$(COLOR)" --green "Preprocessing CXX source to CMakeFiles/cve_finder.dir/src/api_processor.cpp.i"
-	C:\mingw64\bin\g++.exe $(CXX_DEFINES) $(CXX_INCLUDES) $(CXX_FLAGS) -E C:\Users\kyleg\UF\cve_finder\src\api_processor.cpp > CMakeFiles\cve_finder.dir\src\api_processor.cpp.i
+CMakeFiles/cve_finder.dir/src/data_processor.cpp.i: cmake_force
+	@$(CMAKE_COMMAND) -E cmake_echo_color "--switch=$(COLOR)" --green "Preprocessing CXX source to CMakeFiles/cve_finder.dir/src/data_processor.cpp.i"
+	C:\mingw64\bin\g++.exe $(CXX_DEFINES) $(CXX_INCLUDES) $(CXX_FLAGS) -E C:\Users\kyleg\UF\cve_finder\src\data_processor.cpp > CMakeFiles\cve_finder.dir\src\data_processor.cpp.i
 
-CMakeFiles/cve_finder.dir/src/api_processor.cpp.s: cmake_force
-	@$(CMAKE_COMMAND) -E cmake_echo_color "--switch=$(COLOR)" --green "Compiling CXX source to assembly CMakeFiles/cve_finder.dir/src/api_processor.cpp.s"
-	C:\mingw64\bin\g++.exe $(CXX_DEFINES) $(CXX_INCLUDES) $(CXX_FLAGS) -S C:\Users\kyleg\UF\cve_finder\src\api_processor.cpp -o CMakeFiles\cve_finder.dir\src\api_processor.cpp.s
+CMakeFiles/cve_finder.dir/src/data_processor.cpp.s: cmake_force
+	@$(CMAKE_COMMAND) -E cmake_echo_color "--switch=$(COLOR)" --green "Compiling CXX source to assembly CMakeFiles/cve_finder.dir/src/data_processor.cpp.s"
+	C:\mingw64\bin\g++.exe $(CXX_DEFINES) $(CXX_INCLUDES) $(CXX_FLAGS) -S C:\Users\kyleg\UF\cve_finder\src\data_processor.cpp -o CMakeFiles\cve_finder.dir\src\data_processor.cpp.s
 
 CMakeFiles/cve_finder.dir/src/file_checker.cpp.obj: CMakeFiles/cve_finder.dir/flags.make
 CMakeFiles/cve_finder.dir/src/file_checker.cpp.obj: CMakeFiles/cve_finder.dir/includes_CXX.rsp
@@ -135,7 +135,7 @@ CMakeFiles/cve_finder.dir/src/file_checker.cpp.s: cmake_force
 cve_finder_OBJECTS = \
 "CMakeFiles/cve_finder.dir/src/main.cpp.obj" \
 "CMakeFiles/cve_finder.dir/src/Trie.cpp.obj" \
-"CMakeFiles/cve_finder.dir/src/api_processor.cpp.obj" \
+"CMakeFiles/cve_finder.dir/src/data_processor.cpp.obj" \
 "CMakeFiles/cve_finder.dir/src/file_checker.cpp.obj"
 
 # External object files for target cve_finder
@@ -143,7 +143,7 @@ cve_finder_EXTERNAL_OBJECTS =
 
 cve_finder.exe: CMakeFiles/cve_finder.dir/src/main.cpp.obj
 cve_finder.exe: CMakeFiles/cve_finder.dir/src/Trie.cpp.obj
-cve_finder.exe: CMakeFiles/cve_finder.dir/src/api_processor.cpp.obj
+cve_finder.exe: CMakeFiles/cve_finder.dir/src/data_processor.cpp.obj
 cve_finder.exe: CMakeFiles/cve_finder.dir/src/file_checker.cpp.obj
 cve_finder.exe: CMakeFiles/cve_finder.dir/build.make
 cve_finder.exe: C:/mingw64/lib/libcurl.dll.a
