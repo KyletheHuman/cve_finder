@@ -2,11 +2,14 @@
 #include "data_processor.h"
 #include "file_checker.h"
 #include "trie.h"
+#include "RedBlackTree.h"
 
 #include <chrono>
 #include <iostream>
 #include <string>
 #include <vector>
+#include <unordered_map>
+#include <cctype>
 using namespace std;
 
 
@@ -59,7 +62,10 @@ int main (int argc, char* argv[]) {
   string command;
 
   Trie trie;
+  RedBlackTree RBT;
   //Tree tree;
+
+  unordered_map<>
 
 
   while(true) {
@@ -90,6 +96,33 @@ int main (int argc, char* argv[]) {
       cout << "Trie built" << endl;
 
       cout << "Building Red-Black Tree" << endl;
+      // Clear previous tree/index
+      rbt.clear();
+      rbtIndex.clear();
+
+      // Insert CVEs into the RBT and fill the side index
+      for (auto &cve : cves) {
+        if (cve.id.empty()) continue;
+
+        // Parse CVE-YYYY-NNNNNN inline (no helpers)
+        string t; t.reserve(cve.id.size());
+        for (unsigned char ch : cve.id) t.push_back(std::toupper(ch));
+        if (t.rfind("CVE-", 0) != 0) continue;
+        size_t dash2 = t.find('-', 4);
+        if (dash2 == string::npos) continue;
+
+        int year = 0, num = 0;
+        try {
+          year = stoi(t.substr(4, dash2 - 4));
+          num  = stoi(t.substr(dash2 + 1));
+        } catch (...) { continue; }
+        if (num < 0 || num > 999999) continue;
+
+        int key = year * 1'000'000 + num;
+        rbt.insert(key);
+        rbtIndex[key] = &cve;
+      }
+      
       cout << "Red-Black Tree built" << endl;
 
       cout << "CVEs:  " << cves.size() << endl;
@@ -144,6 +177,33 @@ int main (int argc, char* argv[]) {
                 for (CVEstruct* cve : result->cves) {
                     cve->print();
                 }
+            int foundInRBT = 0;
+
+      for (CVEstruct* cve : result->cves) {
+        if (!cve || cve->id.empty()) continue;
+
+        string t; t.reserve(cve->id.size());
+        for (unsigned char ch : cve->id) t.push_back(std::toupper(ch));
+        if (t.rfind("CVE-", 0) != 0) continue;
+        size_t dash2 = t.find('-', 4);
+        if (dash2 == string::npos) continue;
+
+        int year = 0, num = 0;
+        try {
+          year = stoi(t.substr(4, dash2 - 4));
+          num  = stoi(t.substr(dash2 + 1));
+        } catch (...) { continue; }
+        if (num < 0 || num > 999999) continue;
+
+        int key = year * 1'000'000 + num;
+
+        Node* hit = rbt.search(key);
+        if (hit != rbt.getNIL()) {
+          auto it = rbtIndex.find(key);
+          if (it == rbtIndex.end() || it->second == cve)
+            foundInRBT++;
+        }  
+    }
       
       auto startTimeTrie = chrono::high_resolution_clock::now();
       //insert into trie
