@@ -20,7 +20,12 @@ vector<CVEstruct> loadData() {
   vector<CVEstruct> cves;
   string dataPath = "data/cve_data.json";
   if (!checkFile(dataPath)) {
-    cout << "No current CVE data, please update" << endl;
+    cout << "No current CVE data, updating..." << endl;
+    updateData();
+  }
+
+  if (!checkFile(dataPath)) {
+    cout << "Error: No current CVE data" << endl;
     return cves;
   }
 
