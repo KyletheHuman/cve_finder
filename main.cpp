@@ -145,10 +145,13 @@ int main () {
     }
   }
 
-  // cout to user how to format search
   
-  //searches and printing out
+  //todo: 
+  //implement tree inserts in load
+  //implement tree searching in search
 
-  //time tree searches
+  //after project:
+  //functionality for any version/vendor
+  //go with the better of the trees
   return 0;
 }
