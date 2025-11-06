@@ -45,7 +45,7 @@ void printCVE(const CVEstruct &cve, const string &vendorInput, const string &ver
     }
 }
 
-int main (int argc, char* argv[]) {
+int main () {
   cout << "CVE Finder" << endl;
   cout << "commands: update, load, search, exit" << endl;
 
