@@ -24,12 +24,12 @@ struct TrieNode {
 class Trie {
     TrieNode* root;
 
+    public:
+        Trie();
+        ~Trie();
 
-    Trie();
-    ~Trie();
-
-    TrieNode* findChild(TrieNode* node, char c);
-    void insert(string& cpeName, CVEstruct* data);
-    CPEData* search(string& word);
-    void Trie::print(TrieNode* node = nullptr, string prefix = "");
+        TrieNode* findChild(TrieNode* node, char c);
+        void insert(string& cpeName, CVEstruct* data);
+        CPEData* search(string& word);
+        void Trie::print(TrieNode* node = nullptr, string prefix = "");
 };

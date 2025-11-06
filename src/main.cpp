@@ -2,6 +2,9 @@
 
 #include "trie.h"
 #include "file_checker.h"
+#include "api_processor.h"
+
+using namespace std;
 
 // yoink mass data dumps for each year of cve's:
 //cURL all of NVD's API feeds from each year as .gz compressed files
@@ -14,5 +17,24 @@
 //print list
 // *after due date optimize to use better structure*
 void main() {
-    return;
+
+    //insert load results into tree and trie
+    //handle search inputs in while loop
+
+
+    //load the data into vector
+    //give an error if there isn't anything
+    vector<CVEstruct> data = loadData();
+    if (data.empty()) {
+        cout << "Error loading data :(" << endl;
+        return;
+    }
+
+    Trie trie;
+    for (CVEstruct cve : data) {
+        string cpeName = cve.vendor + "-" + cve.product + "-" + cve.version;
+        trie.insert(cpeName, &cve);
+        //TODO: INSERT INTO TREE
+    }
+
 }
