@@ -7,6 +7,44 @@
 #include <vector>
 using namespace std;
 
+
+bool checkMatch(const string &fromData, const string &fromSearch) {
+  if (fromSearch == "") {
+    return true;
+  }
+  if (fromData == "") {
+    return true;
+  }
+  return fromSearch == fromData;
+}
+
+oid printCVE(const CVEstruct &cve, const string &vendorInput, const string &versionInput) {
+    cout << "--------------------" << endl;
+    cout << "ID:  " << cve.id << endl;
+    if (vendorInput.empty()) {
+        cout << "Vendor:  ";
+        if (!cve.vendor.empty())
+            cout << cve.vendor << endl;
+        else
+            cout << "any" << endl;
+    }
+    if (versionInput.empty()) {
+        cout << "Version:  ";
+        if (!cve.version.empty())
+            cout << cve.version << endl;
+        else
+            cout << "any" << endl;
+    }
+
+    cout << "CVSS3 Score:  " << cve.cvss3score << endl;
+    cout << "Description:  ";
+    if (cve.description.size() > 200) { //shortens
+        cout << cve.description.substr(0, 200) << "..." << endl;
+    } else {
+        cout << cve.description << endl;
+    }
+}
+
 int main (int argc, char* argv[]) {
   cout << "CVE Finder" << endl;
   cout << "commands: update, load, search, exit" << endl;
@@ -24,7 +62,6 @@ int main (int argc, char* argv[]) {
     } else if (command == "update") {
       cout << "Updating CVE data" << endl;
       updateData();
-      cves = loadData();
       
     } else if (command == "load") {
       cout << "Loading CVE data" << endl;
@@ -32,6 +69,19 @@ int main (int argc, char* argv[]) {
       if (cves.empty()) {
         cout << "No local data. Try update" << endl;
       }
+
+      cout << "Building Trie" << endl;
+      for (auto &cve :cves) {
+        if (!cve.product.empty()) {
+          trie.insert(cve.product, &cve);
+        }
+      }
+      cout << "Trie built" << endl;
+
+      cout << "Building Red-Black Tree" << endl;
+      cout << "Red-Black Tree built" << endl;
+
+      cout << "CVEs:  " << cves.size() << endl;
       
     } else if (command == "search") {
       if (cves.empty()) {
@@ -43,7 +93,8 @@ int main (int argc, char* argv[]) {
       string product;
       string version;
       
-      cout << "Search - leave blank for any except product" << endl;
+      cout << "Search - leave fields vendor and/or version blank to search for all" << endl;
+      cout << "Note: do not leave product blank" << endl;
       cout << "Enter vendor:  ";
       getline(cin, vendor);
       vendor = cleanInput(vendor);
@@ -65,12 +116,28 @@ int main (int argc, char* argv[]) {
 
       cout << "Searching CVEs" << endl;
       int count = 0;
-      //figure out how to search them in the trees
+      //base search for now
+      for (const auto &cve : cves) {
+        if (checkMatch(cve.product, product) && checkMatch(cve.vendor, vendor) && checkMatch(cve.version, version)) {
+          printCVE(cve, vendor, version);
+          count++;
+        }
+      }
+      
+      auto startTimeTrie = high_resolution_clock::now();
+      //insert into trie
+      auto endTimeTrie = high_resolution_clock::now();
+      auto durationTrie = duration_cast<milliseconds>(endTrie - startTrie).count();
+
+      auto startTimeRB = high_resolution_clock::now();
+      //insert into red-black
+      auto endTimeRB = high_resolution_clock::now();
+      auto durationRB = duration_cast<milliseconds>(endRB - startRB).count();  
 
       if (count == 0) {
         cout << "No matching CVEs found" << endl;
       } else {
-        //prints
+        cout << "CVEs found:  " << count << endl;
       }
       
     } else {
