@@ -38,7 +38,7 @@ find_package(CURL REQUIRED)
 add_executable(cve_finder
     src/main.cpp
     src/Trie.cpp
-    src/api_processor.cpp
+    src/data_processor.cpp
     src/file_checker.cpp
     )
 
