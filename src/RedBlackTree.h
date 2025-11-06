@@ -1,0 +1,64 @@
+#ifndef REDBLACKTREE_H
+#define REDBLACKTREE_H
+
+#include <string>
+#include <utility>
+
+enum class Color { RED, BLACK };
+
+struct Node {
+    int data;              // encoded key: year*1'000'000 + number
+    Color color;
+    Node *left, *right, *parent;
+
+    explicit Node(int d)
+        : data(d), color(Color::RED), left(nullptr), right(nullptr), parent(nullptr) {}
+};
+
+class RedBlackTree {
+public:
+    RedBlackTree();
+    ~RedBlackTree();
+
+    RedBlackTree(const RedBlackTree&)            = delete; // avoid accidental deep copy
+    RedBlackTree& operator=(const RedBlackTree&) = delete;
+    RedBlackTree(RedBlackTree&&)                 = delete;
+    RedBlackTree& operator=(RedBlackTree&&)      = delete;
+
+    void insert(int data);
+    Node* search(int data) const;  // returns NIL if not found
+
+    void inorder() const;
+    void clear();                                // remove all nodes (keeps sentinel)
+
+    Node* getRoot() const { return root; }
+    Node* getNIL()  const { return NIL;  }
+
+    // Debug/validation helpers
+    bool validate(std::string* errMsg = nullptr) const;
+    std::pair<int,int> countColors() const; // {reds, blacks} (excludes NIL)
+
+private:
+    Node* root;
+    Node* NIL; // sentinel (always BLACK)
+
+    // rotations
+    void leftRotate(Node* x);
+    void rightRotate(Node* x);
+
+    // fix after insert
+    void fixInsert(Node* k);
+
+    // helpers
+    void inorderHelper(Node* node) const;
+    Node* searchHelper(Node* node, int data) const;
+
+    // memory
+    void deleteSubtree(Node* node);
+
+    // validation internals
+    bool validateRec(const Node* n, int currentBlack, int& targetBlack, std::string* err) const;
+    void countRec(const Node* n, int& r, int& b) const;
+};
+
+#endif // REDBLACKTREE_H
