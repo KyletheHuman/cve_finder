@@ -97,8 +97,8 @@ int main (int argc, char* argv[]) {
 
       cout << "Building Red-Black Tree" << endl;
       // Clear previous tree/index
-      rbt.clear();
-      rbtIndex.clear();
+      RBT.clear();
+      RBTIndex.clear();
 
       // Insert CVEs into the RBT and fill the side index
       for (auto &cve : cves) {
