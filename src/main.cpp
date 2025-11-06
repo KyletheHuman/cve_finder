@@ -65,7 +65,7 @@ int main (int argc, char* argv[]) {
   RedBlackTree RBT;
   //Tree tree;
 
-  unordered_map<>
+  unordered_map<int, CVEStruct*> RBTIndex;
 
 
   while(true) {
