@@ -18,7 +18,7 @@ bool checkMatch(const string &fromData, const string &fromSearch) {
   return fromSearch == fromData;
 }
 
-oid printCVE(const CVEstruct &cve, const string &vendorInput, const string &versionInput) {
+void printCVE(const CVEstruct &cve, const string &vendorInput, const string &versionInput) {
     cout << "--------------------" << endl;
     cout << "ID:  " << cve.id << endl;
     if (vendorInput.empty()) {
