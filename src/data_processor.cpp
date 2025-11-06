@@ -186,7 +186,6 @@ void updateData() {
   vector<CVEstruct> cves;
 
   curl_global_init(CURL_GLOBAL_DEFAULT);
-  curl_global_cleanup();
   
   for (int year = 2010; year < 2026; ++year) {
     string url = "https://nvd.nist.gov/feeds/json/cve/1.1/nvdcve-1.1-" + to_string(year) + ".json.gz"; //web download path
@@ -200,6 +199,7 @@ void updateData() {
   }
 
   saveData(cves, "data/cve_data.json");
+  curl_global_cleanup();
   cout << "Update completed. CVE data points gathered: " << cves.size() << endl;
 }
 
