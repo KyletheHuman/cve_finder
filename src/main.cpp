@@ -65,7 +65,7 @@ int main (int argc, char* argv[]) {
   RedBlackTree RBT;
   //Tree tree;
 
-  unordered_map<int, CVEStruct*> RBTIndex;
+  unordered_map<int, CVEstruct*> RBTIndex;
 
 
   while(true) {
@@ -119,8 +119,8 @@ int main (int argc, char* argv[]) {
         if (num < 0 || num > 999999) continue;
 
         int key = year * 1'000'000 + num;
-        rbt.insert(key);
-        rbtIndex[key] = &cve;
+        RBT.insert(key);
+        RBTIndex[key] = &cve;
       }
       
       cout << "Red-Black Tree built" << endl;
@@ -177,7 +177,8 @@ int main (int argc, char* argv[]) {
                 for (CVEstruct* cve : result->cves) {
                     cve->print();
                 }
-            int foundInRBT = 0;
+      
+      int foundInRBT = 0;
 
       for (CVEstruct* cve : result->cves) {
         if (!cve || cve->id.empty()) continue;
@@ -197,10 +198,10 @@ int main (int argc, char* argv[]) {
 
         int key = year * 1'000'000 + num;
 
-        Node* hit = rbt.search(key);
-        if (hit != rbt.getNIL()) {
-          auto it = rbtIndex.find(key);
-          if (it == rbtIndex.end() || it->second == cve)
+        Node* hit =RBT.search(key);
+        if (hit != RBT.getNIL()) {
+          auto it = RBTIndex.find(key);
+          if (it == RBTIndex.end() || it->second == cve)
             foundInRBT++;
         }  
     }
