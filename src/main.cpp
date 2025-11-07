@@ -63,7 +63,6 @@ int main () {
 
   Trie trie;
   RedBlackTree RBT;
-  //Tree tree;
 
   unordered_map<int, CVEstruct*> RBTIndex;
 
