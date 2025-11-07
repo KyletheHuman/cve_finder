@@ -1,5 +1,6 @@
 #include <iostream>
 #include <string> //just in case
+#pragma once
 using namespace std;
 
 struct CVEstruct {

@@ -70,7 +70,7 @@ CPEData* Trie::search(string& name) {
     return nullptr;
 }
 
-void Trie::print(TrieNode* node = nullptr, string prefix = "") {
+void Trie::print(TrieNode* node, string prefix) {
     if (!node) {
         node = root;
     }

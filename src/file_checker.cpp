@@ -2,7 +2,7 @@
 
 
 //checks if any data in data/cve data
-inline bool checkFile(const string &path) {
+bool checkFile(const string &path) {
   ifstream file(path);  //try to open
   if (!file.is_open()) {
     return false;
@@ -24,7 +24,7 @@ inline bool checkFile(const string &path) {
 //lowercase
 //remove spaces between version and software with -
 //keep only letters and nums
-inline string cleanInput(const string &in) {
+string cleanInput(const string &in) {
   string input = in;
   
 

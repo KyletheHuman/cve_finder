@@ -54,7 +54,7 @@ string formatCPE(string vendor, string product, string version) {
     return vendor + "-" + product + "-" + version;
 }
 
-int main (int argc, char* argv[]) {
+int main () {
   cout << "CVE Finder" << endl;
   cout << "commands: update, load, search, exit" << endl;
 
