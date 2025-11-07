@@ -40,6 +40,7 @@ add_executable(cve_finder
     src/trie.cpp
     src/data_processor.cpp
     src/file_checker.cpp
+    src/RedBlackTree.cpp
     )
 
 

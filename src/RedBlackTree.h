@@ -4,14 +4,16 @@
 #include <string>
 #include <utility>
 
+#include "cve_struct.h"
+
 enum class Color { RED, BLACK };
 
 struct Node {
-    int data;              // encoded key: year*1'000'000 + number
+    CPEData* data;              // encoded key: year*1'000'000 + number
     Color color;
     Node *left, *right, *parent;
 
-    explicit Node(int d)
+    explicit Node(CPEData* d)
         : data(d), color(Color::RED), left(nullptr), right(nullptr), parent(nullptr) {}
 };
 
@@ -25,8 +27,8 @@ public:
     RedBlackTree(RedBlackTree&&)                 = delete;
     RedBlackTree& operator=(RedBlackTree&&)      = delete;
 
-    void insert(int data);
-    Node* search(int data) const;  // returns NIL if not found
+    void insert(CPEData* data);
+    Node* search(CPEData* data) const;  // returns NIL if not found
 
     void inorder() const;
     void clear();                                // remove all nodes (keeps sentinel)
@@ -36,7 +38,7 @@ public:
 
     // Debug/validation helpers
     bool validate(std::string* errMsg = nullptr) const;
-    std::pair<int,int> countColors() const; // {reds, blacks} (excludes NIL)
+    std::pair<CPEData*,CPEData*> countColors() const; // {reds, blacks} (excludes NIL)
 
 private:
     Node* root;
@@ -51,7 +53,7 @@ private:
 
     // helpers
     void inorderHelper(Node* node) const;
-    Node* searchHelper(Node* node, int data) const;
+    Node* searchHelper(Node* node, CPEData* data) const;
 
     // memory
     void deleteSubtree(Node* node);

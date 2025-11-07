@@ -22,7 +22,7 @@ vector<CVEstruct> loadData() {
   string dataPath = "data/cve_data.json";
   if (!checkFile(dataPath)) {
     cout << "No current CVE data, updating..." << endl;
-    updateData();
+    // updateData();
   }
 
   if (!checkFile(dataPath)) {
@@ -56,17 +56,45 @@ size_t curlDataHandler(void* contents, size_t size, size_t bytes, void* outputFi
 }
 
 bool downloadFile(const string &url, const string &outPath) {
-  CURL* curl = curl_easy_init();               //starts libcurl
+  CURL* curl = curl_easy_init(); 
+  if (!curl) {
+    cout << "Error: curl init failed" << endl;
+    return false;
+  }
   FILE* localFile = fopen(outPath.c_str(), "wb");     //opens local file in inary mode (wb) to out into
-
+  if (!localFile) {
+        cout << "Error: cannot open local file\n";
+        curl_easy_cleanup(curl);
+        return false;
+    }
   curl_easy_setopt(curl, CURLOPT_URL, url.c_str());  //download url
   curl_easy_setopt(curl, CURLOPT_WRITEFUNCTION, curlDataHandler); //tells how to handle incoming data chunks
   curl_easy_setopt(curl, CURLOPT_WRITEDATA, localFile); //sends data to open local file
   curl_easy_setopt(curl, CURLOPT_FOLLOWLOCATION, 1L); //allows for redirects on page
 
+   curl_easy_setopt(curl, CURLOPT_SSL_VERIFYPEER, 0L);
+   curl_easy_setopt(curl, CURLOPT_SSL_VERIFYHOST, 0L);
+
+   curl_easy_setopt(curl, CURLOPT_USERAGENT, 
+    "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 "
+    "(KHTML, like Gecko) Chrome/115.0.0.0 Safari/537.36");
+
+
   CURLcode curlResponse = curl_easy_perform(curl); //connnects to server and downloads
   fclose(localFile);
   curl_easy_cleanup(curl);
+  if (curlResponse != CURLE_OK) {
+        cout << "CURL error: " << curl_easy_strerror(curlResponse) << endl;
+        return false;
+    }
+
+  // Check if file is empty
+  ifstream f(outPath, ios::binary | ios::ate);
+  if (!f.is_open() || f.tellg() == 0) {
+      cerr << "Downloaded file is empty: " << outPath << endl;
+      return false;
+  }
+
   cout << "Downloaded: " << url << endl;
   return true;
 }
@@ -94,77 +122,106 @@ bool decompressFile(const string &gzipPath, const string &outPath) {
 
 
 vector<CVEstruct> parseJson(const string &jsonPath) { //individual json files
-  vector<CVEstruct> cves;
-  ifstream jsonFile(jsonPath);
+  // vector<CVEstruct> cves;
+  // ifstream jsonFile(jsonPath);
 
-  json data;
-  jsonFile >> data;
-  jsonFile.close();
+  // json data;
+  // jsonFile >> data;
+  // jsonFile.close();
 
-  for (auto &cveJson : data["CVE_Items"]) {
-    CVEstruct cve;
-    cve.id = cveJson["cve"]["CVE_data_meta"].value("ID", "temp");
+  // for (auto &cveJson : data["CVE_Items"]) {
+  //   CVEstruct cve;
+  //   cve.id = cveJson["cve"]["CVE_data_meta"].value("ID", "temp");
     
-    if (cveJson["cve"]["description"].contains("description_data")) {
-      for (auto &description : cveJson["cve"]["description"]["description_data"]) {
-        if (description.value("lang", "") == "en") {
-          cve.description = description.value("value", "temp");
-          break;
-        }
-      }
-    }
+  //   if (cveJson["cve"]["description"].contains("description_data")) {
+  //     for (auto &description : cveJson["cve"]["description"]["description_data"]) {
+  //       if (description.value("lang", "") == "en") {
+  //         cve.description = description.value("value", "temp");
+  //         break;
+  //       }
+  //     }
+  //   }
     
-    if (cveJson.contains("impact") && cveJson["impact"].contains("baseMetricV3")) {
-      cve.cvss3score = cveJson["impact"]["baseMetricV3"]["cvssV3"].value("baseScore", -1.0);
-    } else {
-      cve.cvss3score = -1.0; 
-    }
+  //   if (cveJson.contains("impact") && cveJson["impact"].contains("baseMetricV3")) {
+  //     cve.cvss3score = cveJson["impact"]["baseMetricV3"]["cvssV3"].value("baseScore", -1.0);
+  //   } else {
+  //     cve.cvss3score = -1.0; 
+  //   }
 
-    cve.vendor = "";
-    cve.product = "";
-    cve.version = "";
+  //   cve.vendor = "";
+  //   cve.product = "";
+  //   cve.version = "";
 
-    //nvd stores software under configurations -> nodes -> cpe_match as cpe:2.3:a:microsoft:minecraft:1.7.2:*:*...
-    if (cveJson.contains("configurations") && cveJson["configurations"].contains("nodes")) {
-      for (const auto &node : cveJson["configurations"]["nodes"]) {
-        if (node.contains("cpe_match")) {
-          for (const auto &cpe : node["cpe_match"]) {
-            if (cpe.contains("cpe23Uri")) {
+  //   //nvd stores software under configurations -> nodes -> cpe_match as cpe:2.3:a:microsoft:minecraft:1.7.2:*:*...
+  //   if (cveJson.contains("configurations") && cveJson["configurations"].contains("nodes")) {
+  //     for (const auto &node : cveJson["configurations"]["nodes"]) {
+  //       if (node.contains("cpe_match")) {
+  //         for (const auto &cpe : node["cpe_match"]) {
+  //           if (cpe.contains("cpe23Uri")) {
               
-              string cpeEntry = cpe["cpe23Uri"];
-              vector<string> cpeFields;
-              string temp;
-              for (char letter : cpeEntry) {
-                if (letter == ':') {
-                  cpeFields.push_back(temp);
-                  temp.clear();
-                } else {
-                  temp += letter;
-                }
-              }
+  //             string cpeEntry = cpe["cpe23Uri"];
+  //             vector<string> cpeFields;
+  //             string temp;
+  //             for (char letter : cpeEntry) {
+  //               if (letter == ':') {
+  //                 cpeFields.push_back(temp);
+  //                 temp.clear();
+  //               } else {
+  //                 temp += letter;
+  //               }
+  //             }
               
-              cpeFields.push_back(temp);
-              if (cpeFields.size() >= 6) { //makes sure has all fields
-                cve.vendor = cleanInput(cpeFields[3]);
-                cve.product = cleanInput(cpeFields[4]);
-                cve.version = cleanInput(cpeFields[5]);
-                if (cve.vendor == "*" || cve.vendor == "-") {
-                  cve.vendor = "";
+  //             cpeFields.push_back(temp);
+  //             if (cpeFields.size() >= 6) { //makes sure has all fields
+  //               cve.vendor = cleanInput(cpeFields[3]);
+  //               cve.product = cleanInput(cpeFields[4]);
+  //               cve.version = cleanInput(cpeFields[5]);
+  //               if (cve.vendor == "*" || cve.vendor == "-") {
+  //                 cve.vendor = "";
+  //               }
+  //               if (cve.version == "*" || cve.version == "-") {
+  //                 cve.version = "";
+  //               }
+  //             }
+  //             break;
+  //           }
+  //         }
+  //       }
+  //     }
+  //   }
+  //   cves.push_back(cve);
+  // }
+  // cout << "Parsed: Complete " << jsonPath << endl;
+  // return cves;
+   vector<CVEstruct> cves;
+    ifstream jsonFile(jsonPath);
+    json data;
+    jsonFile >> data;
+    jsonFile.close();
+
+    if (!data.contains("vulnerabilities")) return cves;
+
+    for (auto &vuln : data["vulnerabilities"]) {
+        CVEstruct cve;
+        if (vuln.contains("cve")) {
+            auto &cveJson = vuln["cve"];
+            cve.id = cveJson["id"].get<string>();
+            if (cveJson.contains("descriptions")) {
+                for (auto &desc : cveJson["descriptions"]) {
+                    if (desc.value("lang", "") == "en") {
+                        cve.description = desc.value("value", "");
+                        break;
+                    }
                 }
-                if (cve.version == "*" || cve.version == "-") {
-                  cve.version = "";
-                }
-              }
-              break;
             }
-          }
         }
-      }
+
+        // You can add CVSS parsing and vendor/product logic here
+        cves.push_back(cve);
     }
-    cves.push_back(cve);
-  }
-  cout << "Parsed: Complete" << endl;
-  return cves;
+
+    cout << "Parsed: Complete " << jsonPath << " (" << cves.size() << " CVEs)" << endl;
+    return cves;
 }
 
 
@@ -184,30 +241,87 @@ void saveData(const vector<CVEstruct> &cves, const string &outPath) {
   ofstream outFile(outPath);
   outFile << combinedJson.dump(4); //dumps and makes readable
   outFile.close();
-  cout << "Data Saving: Complete";
+  cout << "Data Saving: Complete" << endl;
 }
 
 
 void updateData() {
-  // filesystem::create_directories("data");
-  vector<CVEstruct> cves;
+  // // filesystem::create_directories("data");
+  // vector<CVEstruct> cves;
 
-  curl_global_init(CURL_GLOBAL_DEFAULT);
+  // curl_global_init(CURL_GLOBAL_DEFAULT);
   
-  for (int year = 2010; year < 2026; ++year) {
-    string url = "https://nvd.nist.gov/feeds/json/cve/1.1/nvdcve-1.1-" + to_string(year) + ".json.gz"; //web download path
-    string gzipPath = "data/nvdcve-1.1-" + to_string(year) + ".json.gz"; //local file path
-    string jsonPath = "data/nvdcve-1.1-" + to_string(year) + ".json";    //local file path
+  // for (int year = 2010; year < 2026; ++year) {
+  //   string url = "https://services.nvd.nist.gov/rest/json/cves/2.0?"
+  //            "kevStartDate=2010-01-01T00:00:00Z&"
+  //            "kevEndDate=2025-11-01T23:59:59Z";
+  //   string gzipPath = "data/nvdcve-1.1-" + to_string(year) + ".json.gz"; //local file path
+  //   string jsonPath = "data/nvdcve-1.1-" + to_string(year) + ".json";    //local file path
 
-    downloadFile(url, gzipPath);
-    decompressFile(gzipPath, jsonPath);
-    vector<CVEstruct> cvesEachYear = parseJson(jsonPath);
-    cves.insert(cves.end(), cvesEachYear.begin(), cvesEachYear.end());
-  }
+  //   downloadFile(url, gzipPath);
+  //   // decompressFile(gzipPath, jsonPath);
+  //   vector<CVEstruct> cvesEachYear = parseJson(jsonPath);
+  //   cves.insert(cves.end(), cvesEachYear.begin(), cvesEachYear.end());
+  // }
 
-  saveData(cves, "data/cve_data.json");
-  curl_global_cleanup();
-  cout << "Update completed. CVE data points gathered: " << cves.size() << endl;
+  // saveData(cves, "data/cve_data.json");
+  // curl_global_cleanup();
+  // cout << "Update completed. CVE data points gathered: " << cves.size() << endl;
+  vector<CVEstruct> allCves;
+
+    curl_global_init(CURL_GLOBAL_DEFAULT);
+
+    // --- Example: KEV API download ---
+    // string url = "https://services.nvd.nist.gov/rest/json/cves/2.0?"
+    //              "kevStartDate=2010-01-01T00:00:00Z&kevEndDate=2025-11-01T23:59:59Z";
+    // string outPath = "data/kev_cves.json";
+
+    // if (downloadFile(url, outPath)) {
+    //     vector<CVEstruct> cves = parseJson(outPath);
+    //     allCves.insert(allCves.end(), cves.begin(), cves.end());
+    // }
+
+    // --- Optional: yearly .json.gz feed ---
+    for (int year = 2010; year <= 2025; ++year) {
+        // // string gzipUrl = "https://nvd.nist.gov/feeds/json/cve/1.1/nvdcve-1.1-" + to_string(year) + ".json.gz";
+        // // string gzipPath = "data/nvdcve-1.1-" + to_string(year) + ".json.gz";
+        // string jsonPath = "data/nvdcve-2.0-" + to_string(year) + ".json";
+
+        // // if (!downloadFile(gzipUrl, gzipPath)) continue;
+        // // if (!decompressFile(gzipPath, gzipPath)) continue;
+
+        // vector<CVEstruct> yearCves = parseJson(jsonPath);
+        // cout << yearCves[0].product << endl;
+        // for (CVEstruct &cve : yearCves) {
+        //   allCves.push_back(cve);
+        // }
+        // // allCves.insert(allCves.end(), yearCves.begin(), yearCves.end());
+        // cout << allCves.size() << endl;
+        string jsonPath = "data/nvdcve-2.0-" + to_string(year) + ".json";
+
+      try {
+          vector<CVEstruct> yearCves = parseJson(jsonPath);
+
+          if (!yearCves.empty()) {
+              cout << yearCves[0].product << endl;
+          }
+
+          for (const CVEstruct &cve : yearCves) {
+              allCves.push_back(cve);
+          }
+
+          cout << "Total CVEs so far: " << allCves.size() << endl;
+
+      } catch (const std::exception &e) {
+          cerr << "Error parsing " << jsonPath << ": " << e.what() << endl;
+          continue;  // skip to next year
+      }
+    }
+
+    curl_global_cleanup();
+
+    saveData(allCves, "data/cve_data.json");
+    cout << "Update completed. Total CVEs: " << allCves.size() << endl;
 }
 
 

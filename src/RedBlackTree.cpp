@@ -111,7 +111,7 @@ void RedBlackTree::fixInsert(Node* k) {
     root->color = Color::BLACK;
 }
 
-void RedBlackTree::insert(int data) {
+void RedBlackTree::insert(CPEData* data) {
     Node* z = new Node(data);
     z->left = z->right = NIL;
 
