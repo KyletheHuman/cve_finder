@@ -37,8 +37,7 @@ find_package(CURL REQUIRED)
 # Build your main program
 add_executable(cve_finder
     src/main.cpp
-    src/Trie.cpp
-    src/RedBlackTree.cpp
+    src/trie.cpp
     src/data_processor.cpp
     src/file_checker.cpp
     )
@@ -77,4 +76,5 @@ target_link_libraries(cve_finder PRIVATE
     nlohmann_json::nlohmann_json
     CURL::libcurl
     ZLIB::ZLIB
+
 )
