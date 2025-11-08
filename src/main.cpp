@@ -157,7 +157,7 @@ int main () {
 
       cout << "Searching CVEs" << endl;
       
-      int count = 0;      
+      int foundInTrie = 0;      
       auto startTimeTrie = chrono::high_resolution_clock::now();
       string cpe = formatCPE(vendor, product, version);
       CPEData* result = trie.search(cpe);
@@ -167,7 +167,7 @@ int main () {
       } else {
         for (CVEstruct* cve : result->cves) {
             cve->print();
-          count++;
+          foundInTrie++;
         }
       }
       auto endTimeTrie = chrono::high_resolution_clock::now();
@@ -180,10 +180,12 @@ int main () {
       Node* res = RBT.search(cpe);
       if (res != RBT.getNIL()) {
           for (CVEstruct* cve : res->data->cves) {
-              if (checkMatch(cve->vendor, vendor) && checkMatch(cve->version, version)) {
-                  printCVE(*cve, vendor, version);
-                  foundInRBT++;
-              }
+              // if (checkMatch(cve->vendor, vendor) && checkMatch(cve->version, version)) {
+              //     printCVE(*cve, vendor, version);
+              //     foundInRBT++;
+              // }
+              cve->print();
+              foundInRBT++;
           }
       }
 
@@ -214,16 +216,12 @@ int main () {
     // }
        auto endTimeRB = chrono::high_resolution_clock::now();
       auto durationRB = chrono::duration_cast<chrono::milliseconds>(endTimeRB - startTimeRB).count();  
-      
-      //insert into trie
-   
-      //insert into red-black
      
-      if (count == 0) {
+      if (foundInTrie == 0 && foundInRBT == 0) {
         cout << "No matching CVEs found" << endl;
       } else {
-        cout << "CVEs found:  " << count << endl;
-        cout << "CVEs in rbt: " << foundInRBT << endl;
+        cout << "CVEs found in trie:  " << foundInTrie << endl;
+        cout << "CVEs in rbtree: " << foundInRBT << endl;
         cout << "Trie time:  " << durationTrie << endl;
         cout << "Red-Black Tree time:  " << durationRB << endl;
       }
@@ -240,5 +238,6 @@ int main () {
    //after project:
   //functionality for any version/vendor
   //go with the better of the trees
+  //probably trie so you can use don't need exact software name
   return 0;
 }

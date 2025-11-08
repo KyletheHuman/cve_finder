@@ -22,7 +22,7 @@ vector<CVEstruct> loadData() {
   string dataPath = "data/cve_data.json";
   if (!checkFile(dataPath)) {
     cout << "No current CVE data, updating..." << endl;
-    // updateData();
+    updateData();
   }
 
   if (!checkFile(dataPath)) {
@@ -40,14 +40,13 @@ vector<CVEstruct> loadData() {
     cveEntry.id = cveJson.value("id", "temp");
     cveEntry.description = cveJson.value("description", "temp");
     cveEntry.cvss3score = cveJson.value("cvss3score", -1.0);
+    cveEntry.cvssVector = cveJson.value("cvssVector", "temp");
     cveEntry.vendor = cveJson.value("vendor", "any");
     cveEntry.product = cveJson.value("product", "none");
     cveEntry.version = cveJson.value("version", "any");
     cves.push_back(cveEntry);
   }
-  cves[0].print();
   
-  cout << cves[0].cpe() << endl;
   cout << "Loaded " << cves.size() << " CVE data points" << endl;
   return cves;
 }
@@ -273,81 +272,93 @@ vector<CVEstruct*> parseJson(const string &jsonPath) { //individual json files
   if (!data.contains("vulnerabilities")) return cves;
 
   for (auto &vuln : data["vulnerabilities"]) {
-      if (!vuln.contains("cve")) continue;
+    if (!vuln.contains("cve")) continue;
 
-      auto &cveJson = vuln["cve"];
+    auto &cveJson = vuln["cve"];
 
-      // shared CVE metadata
-      string id = cveJson.value("id", "");
-      string description = "";
-      double cvssScore = 0.0;
-      string cvssVector = "";
+    // shared CVE metadata
+    string id = cveJson.value("id", "");
+    string description = "";
+    double cvssScore = 0.0;
+    string cvssVector = "";
 
-      // description
-      if (cveJson.contains("descriptions")) {
-          for (auto &desc : cveJson["descriptions"]) {
-              if (desc.value("lang", "") == "en") {
-                  description = desc.value("value", "");
-                  break;
-              }
-          }
-      }
-
-      // CVSS 3.0 (you can add V31 similarly)
-      if (cveJson.contains("cvssMetricV30")) {
-          auto &cvssList = cveJson["cvssMetricV30"];
+    // description
+    if (cveJson.contains("descriptions")) {
+        for (auto &desc : cveJson["descriptions"]) {
+            if (desc.value("lang", "") == "en") {
+                description = desc.value("value", "");
+                break;
+            }
+        }
+    }
+    
+    if (cveJson.contains("metrics")) {
+      auto& metrics = cveJson["metrics"];
+      //CVSS 2.0
+      if (metrics.contains("cvssMetricV2")) {
+          auto &cvssList = metrics["cvssMetricV2"];
           if (!cvssList.empty() && cvssList[0].contains("cvssData")) {
               auto &cvssData = cvssList[0]["cvssData"];
               cvssVector = cvssData.value("vectorString", "");
               cvssScore  = cvssData.value("baseScore", 0.0);
           }
       }
-
-      // Now parse configurations
-      if (!cveJson.contains("configurations")) continue;
-
-      auto &configs = cveJson["configurations"];
-
-      for (auto &config : configs) {
-          if (!config.contains("nodes")) continue;
-
-          for (auto &node : config["nodes"]) {
-              if (!node.contains("cpeMatch")) continue;
-
-              for (auto &cpeMatch : node["cpeMatch"]) {
-                  if (!cpeMatch.contains("criteria")) continue;
-
-                  string fullCPE = cpeMatch["criteria"];
-
-                  // Parse cpe:2.3:part:vendor:product:version:...
-                  vector<string> fields;
-                  {
-                      string temp;
-                      stringstream ss(fullCPE);
-                      while (getline(ss, temp, ':')) {
-                          fields.push_back(temp);
-                      }
-                  }
-                  if (fields.size() < 6) continue;
-
-                  string vendor  = fields[3];
-                  string product = fields[4];
-                  string version = fields[5];
-
-                  // Create INDIVIDUAL CVEstruct for this CPE
-                  CVEstruct* cve = new CVEstruct();
-                  cve->id = id;
-                  cve->description = description;
-                  cve->vendor = vendor;
-                  cve->product = product;
-                  cve->version = version;
-                  cve->cvss3score = cvssScore;
-                  cve->cvssVector = cvssVector;
-
-                  cves.push_back(cve);
-              }
+      // CVSS 3.1
+      if (metrics.contains("cvssMetricV31")) {
+          auto &cvssList = metrics["cvssMetricV31"];
+          if (!cvssList.empty() && cvssList[0].contains("cvssData")) {
+              auto &cvssData = cvssList[0]["cvssData"];
+              cvssVector = cvssData.value("vectorString", "");
+              cvssScore  = cvssData.value("baseScore", 0.0);
           }
       }
+    }
+
+    // Now parse configurations
+    if (!cveJson.contains("configurations")) continue;
+
+    auto &configs = cveJson["configurations"];
+
+    for (auto &config : configs) {
+        if (!config.contains("nodes")) continue;
+
+        for (auto &node : config["nodes"]) {
+            if (!node.contains("cpeMatch")) continue;
+
+            for (auto &cpeMatch : node["cpeMatch"]) {
+                if (!cpeMatch.contains("criteria")) continue;
+
+                string fullCPE = cpeMatch["criteria"];
+
+                // Parse cpe:2.3:part:vendor:product:version:...
+                vector<string> fields;
+                {
+                    string temp;
+                    stringstream ss(fullCPE);
+                    while (getline(ss, temp, ':')) {
+                        fields.push_back(temp);
+                    }
+                }
+                if (fields.size() < 6) continue;
+
+                string vendor  = fields[3];
+                string product = fields[4];
+                string version = fields[5];
+
+                // Create INDIVIDUAL CVEstruct for this CPE
+                CVEstruct* cve = new CVEstruct();
+                cve->id = id;
+                cve->description = description;
+                cve->vendor = vendor;
+                cve->product = product;
+                cve->version = version;
+                cve->cvss3score = cvssScore;
+                cve->cvssVector = cvssVector;
+
+                cves.push_back(cve);
+            }
+        }
+    }
   }
 
   cout << "Parsed: Complete " << jsonPath << " (" << cves.size() << " CVEs)" << endl;
@@ -432,10 +443,6 @@ void updateData() {
 
       try {
           vector<CVEstruct*> yearCves = parseJson(jsonPath);
-
-          if (!yearCves.empty()) {
-              cout << yearCves[0]->product << endl;
-          }
 
           for (CVEstruct* cve : yearCves) {
               allCves.push_back(cve);

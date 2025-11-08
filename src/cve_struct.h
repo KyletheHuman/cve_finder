@@ -15,6 +15,7 @@ struct CVEstruct {
   void print() {
         cout << "ID: " << id << endl;
         cout << "CVSS3.0 score: " << cvss3score << endl;
+        cout << "cvssVector: " << cvssVector << endl;
         cout << "Description: " << description << endl;
     }
 
