@@ -123,152 +123,12 @@ bool decompressFile(const string &gzipPath, const string &outPath) {
 
 
 vector<CVEstruct*> parseJson(const string &jsonPath) { //individual json files
-  // vector<CVEstruct> cves;
-  // ifstream jsonFile(jsonPath);
-
-  // json data;
-  // jsonFile >> data;
-  // jsonFile.close();
-
-  // for (auto &cveJson : data["CVE_Items"]) {
-  //   CVEstruct cve;
-  //   cve.id = cveJson["cve"]["CVE_data_meta"].value("ID", "temp");
-    
-  //   if (cveJson["cve"]["description"].contains("description_data")) {
-  //     for (auto &description : cveJson["cve"]["description"]["description_data"]) {
-  //       if (description.value("lang", "") == "en") {
-  //         cve.description = description.value("value", "temp");
-  //         break;
-  //       }
-  //     }
-  //   }
-    
-  //   if (cveJson.contains("impact") && cveJson["impact"].contains("baseMetricV3")) {
-  //     cve.cvss3score = cveJson["impact"]["baseMetricV3"]["cvssV3"].value("baseScore", -1.0);
-  //   } else {
-  //     cve.cvss3score = -1.0; 
-  //   }
-
-  //   cve.vendor = "";
-  //   cve.product = "";
-  //   cve.version = "";
-
-  //   //nvd stores software under configurations -> nodes -> cpe_match as cpe:2.3:a:microsoft:minecraft:1.7.2:*:*...
-  //   if (cveJson.contains("configurations") && cveJson["configurations"].contains("nodes")) {
-  //     for (const auto &node : cveJson["configurations"]["nodes"]) {
-  //       if (node.contains("cpe_match")) {
-  //         for (const auto &cpe : node["cpe_match"]) {
-  //           if (cpe.contains("cpe23Uri")) {
-              
-  //             string cpeEntry = cpe["cpe23Uri"];
-  //             vector<string> cpeFields;
-  //             string temp;
-  //             for (char letter : cpeEntry) {
-  //               if (letter == ':') {
-  //                 cpeFields.push_back(temp);
-  //                 temp.clear();
-  //               } else {
-  //                 temp += letter;
-  //               }
-  //             }
-              
-  //             cpeFields.push_back(temp);
-  //             if (cpeFields.size() >= 6) { //makes sure has all fields
-  //               cve.vendor = cleanInput(cpeFields[3]);
-  //               cve.product = cleanInput(cpeFields[4]);
-  //               cve.version = cleanInput(cpeFields[5]);
-  //               if (cve.vendor == "*" || cve.vendor == "-") {
-  //                 cve.vendor = "";
-  //               }
-  //               if (cve.version == "*" || cve.version == "-") {
-  //                 cve.version = "";
-  //               }
-  //             }
-  //             break;
-  //           }
-  //         }
-  //       }
-  //     }
-  //   }
-  //   cves.push_back(cve);
-  // }
-  // cout << "Parsed: Complete " << jsonPath << endl;
-  // return cves;
    vector<CVEstruct*> cves;
     ifstream jsonFile(jsonPath);
     json data;
     jsonFile >> data;
     jsonFile.close();
 
-  //   if (!data.contains("vulnerabilities")) return cves;
-
-  //   for (auto &vuln : data["vulnerabilities"]) {
-  //       CVEstruct* cve = new CVEstruct();
-  //       if (vuln.contains("cve")) {
-  //           auto &cveJson = vuln["cve"];
-  //           cve->id = cveJson["id"].get<string>();
-  //           if (cveJson.contains("descriptions")) {
-  //               for (auto &desc : cveJson["descriptions"]) {
-  //                   if (desc.value("lang", "") == "en") {
-  //                       cve->description = desc.value("value", "");
-  //                       break;
-  //                   }
-  //               }
-  //           }
-  //           if (cveJson.contains("cvssMetricV30")) {
-  //             auto& cvss = cveJson["cvssMetricV30"];
-  //             if (cvss.contains("cvssData")) {
-  //               cve->cvssVector = cvss["vectorString"];
-  //               cve->cvss3score = cvss["baseScore"];
-  //             }
-  //           }
-
-  //           if (cveJson.contains("configurations")) {
-  //             auto& config = cveJson["configurations"];
-  //             if (config.contains("nodes")) {
-  //               auto& nodes = config["nodes"];
-  //               for (auto& cpeMatch : nodes["cpeMatch"]) {
-  //                 // Extract the criteria string (CPE 2.3 URI)
-  //                 string fullCPE = cpeMatch.value("criteria", "");
-
-  //                 // Example:
-  //                 //   cpe:2.3:o:google:android:12.0:*:*:*:*:*:*:*
-  //                 //
-  //                 // We split on ':' and take:
-  //                 //   [3] vendor
-  //                 //   [4] product
-  //                 //   [5] version
-
-  //                 vector<string> parts;
-  //                 string cur;
-  //                 for (char ch : fullCPE) {
-  //                     if (ch == ':') {
-  //                         parts.push_back(cur);
-  //                         cur.clear();
-  //                     } else {
-  //                         cur.push_back(ch);
-  //                     }
-  //                 }
-  //                 parts.push_back(cur);
-
-  //                 if (parts.size() >= 6) {
-  //                     string vendor  = parts[3];
-  //                     string product = parts[4];
-  //                     string version = parts[5];
-
-  //                     // Store inside your CVE struct however you track multiple CPEs
-  //                     cve->affectedVendors.push_back(vendor);
-  //                     cve->affectedProducts.push_back(product);
-  //                     cve->affectedVersions.push_back(version);
-  //                 }
-  //               }
-  //             }
-  //           }
-  //       }
-
-  //       // You can add CVSS parsing and vendor/product logic here
-  //       cves.push_back(cve);
-  //   }
   if (!data.contains("vulnerabilities")) return cves;
 
   for (auto &vuln : data["vulnerabilities"]) {
@@ -330,7 +190,7 @@ vector<CVEstruct*> parseJson(const string &jsonPath) { //individual json files
 
                 string fullCPE = cpeMatch["criteria"];
 
-                // Parse cpe:2.3:part:vendor:product:version:...
+                // Parse cpe:2.3:part:vendor:product:version:
                 vector<string> fields;
                 {
                     string temp;
@@ -345,7 +205,7 @@ vector<CVEstruct*> parseJson(const string &jsonPath) { //individual json files
                 string product = fields[4];
                 string version = fields[5];
 
-                // Create INDIVIDUAL CVEstruct for this CPE
+                // Create cve for each one associated with cpe
                 CVEstruct* cve = new CVEstruct();
                 cve->id = id;
                 cve->description = description;
@@ -388,59 +248,14 @@ void saveData(const vector<CVEstruct*> &cves, const string &outPath) {
 
 
 void updateData() {
-  // // filesystem::create_directories("data");
-  // vector<CVEstruct> cves;
-
-  // curl_global_init(CURL_GLOBAL_DEFAULT);
-  
-  // for (int year = 2010; year < 2026; ++year) {
-  //   string url = "https://services.nvd.nist.gov/rest/json/cves/2.0?"
-  //            "kevStartDate=2010-01-01T00:00:00Z&"
-  //            "kevEndDate=2025-11-01T23:59:59Z";
-  //   string gzipPath = "data/nvdcve-1.1-" + to_string(year) + ".json.gz"; //local file path
-  //   string jsonPath = "data/nvdcve-1.1-" + to_string(year) + ".json";    //local file path
-
-  //   downloadFile(url, gzipPath);
-  //   // decompressFile(gzipPath, jsonPath);
-  //   vector<CVEstruct> cvesEachYear = parseJson(jsonPath);
-  //   cves.insert(cves.end(), cvesEachYear.begin(), cvesEachYear.end());
-  // }
-
-  // saveData(cves, "data/cve_data.json");
-  // curl_global_cleanup();
-  // cout << "Update completed. CVE data points gathered: " << cves.size() << endl;
   vector<CVEstruct*> allCves;
 
     curl_global_init(CURL_GLOBAL_DEFAULT);
 
-    // --- Example: KEV API download ---
-    // string url = "https://services.nvd.nist.gov/rest/json/cves/2.0?"
-    //              "kevStartDate=2010-01-01T00:00:00Z&kevEndDate=2025-11-01T23:59:59Z";
-    // string outPath = "data/kev_cves.json";
-
-    // if (downloadFile(url, outPath)) {
-    //     vector<CVEstruct> cves = parseJson(outPath);
-    //     allCves.insert(allCves.end(), cves.begin(), cves.end());
-    // }
-
-    // --- Optional: yearly .json.gz feed ---
     for (int year = 2010; year <= 2025; ++year) {
-        // // string gzipUrl = "https://nvd.nist.gov/feeds/json/cve/1.1/nvdcve-1.1-" + to_string(year) + ".json.gz";
-        // // string gzipPath = "data/nvdcve-1.1-" + to_string(year) + ".json.gz";
-        // string jsonPath = "data/nvdcve-2.0-" + to_string(year) + ".json";
+      string jsonPath = "data/nvdcve-2.0-" + to_string(year) + ".json";
 
-        // // if (!downloadFile(gzipUrl, gzipPath)) continue;
-        // // if (!decompressFile(gzipPath, gzipPath)) continue;
-
-        // vector<CVEstruct> yearCves = parseJson(jsonPath);
-        // cout << yearCves[0].product << endl;
-        // for (CVEstruct &cve : yearCves) {
-        //   allCves.push_back(cve);
-        // }
-        // // allCves.insert(allCves.end(), yearCves.begin(), yearCves.end());
-        // cout << allCves.size() << endl;
-        string jsonPath = "data/nvdcve-2.0-" + to_string(year) + ".json";
-
+      //we got a lot of errors at this part
       try {
           vector<CVEstruct*> yearCves = parseJson(jsonPath);
 

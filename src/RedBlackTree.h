@@ -55,7 +55,6 @@ private:
 
     // fix after insert
     void fixInsert(Node* k);
-    Node* insertHelper(Node* node, string& cpeName, CVEstruct* cve);
 
     // helpers
     void inorderHelper(Node* node) const;
