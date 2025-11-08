@@ -232,11 +232,13 @@ int main () {
       cout << "No command found" << endl;
     }
   }
+  //todo: 
+  //fix RB tree
+  //test (currently working load, update)
+  //finish report with big Os
 
-  // cout to user how to format search
-  
-  //searches and printing out
-
-  //time tree searches
+   //after project:
+  //functionality for any version/vendor
+  //go with the better of the trees
   return 0;
 }
