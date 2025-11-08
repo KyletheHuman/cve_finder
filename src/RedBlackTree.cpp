@@ -144,13 +144,13 @@ void RedBlackTree::insert(CPEData* data) {
     fixInsert(z);
 }
 
-Node* RedBlackTree::searchHelper(Node* node, int data) const {
+Node* RedBlackTree::searchHelper(Node* node, CPEData* data) const {
     if (node == NIL || node->data == data) return node;
     return (data < node->data) ? searchHelper(node->left, data)
                                : searchHelper(node->right, data);
 }
 
-Node* RedBlackTree::search(int data) const {
+Node* RedBlackTree::search(CPEData* data) const {
     return searchHelper(root, data);
 }
 
@@ -184,7 +184,7 @@ bool RedBlackTree::validateRec(const Node* n, int currentBlack, int& targetBlack
     // red node cannot have red child
     if (n->color == Color::RED) {
         if (n->left->color == Color::RED || n->right->color == Color::RED) {
-            if (err) *err = "Red node has red child at key " + std::to_string(n->data);
+            if (err) *err = "Red node has red child at key " + n->data->cpeName;
             return false;
         }
     }

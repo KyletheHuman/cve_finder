@@ -5,11 +5,12 @@
 #include <utility>
 
 #include "cve_struct.h"
+#include "cve_data.h"
 
 enum class Color { RED, BLACK };
 
 struct Node {
-    CPEData* data;              // encoded key: year*1'000'000 + number
+    CPEData* data;
     Color color;
     Node *left, *right, *parent;
 
@@ -38,7 +39,7 @@ public:
 
     // Debug/validation helpers
     bool validate(std::string* errMsg = nullptr) const;
-    std::pair<CPEData*,CPEData*> countColors() const; // {reds, blacks} (excludes NIL)
+    std::pair<int, int> countColors() const; // {reds, blacks} (excludes NIL)
 
 private:
     Node* root;
