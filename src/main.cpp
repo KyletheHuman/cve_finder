@@ -64,9 +64,6 @@ int main () {
   Trie trie;
   RedBlackTree RBT;
 
-  unordered_map<int, CVEstruct*> RBTIndex;
-
-
   while(true) {
     getline(cin, command);
     command = cleanInput(command);
@@ -97,7 +94,6 @@ int main () {
       cout << "Building Red-Black Tree" << endl;
       // Clear previous tree/index
       RBT.clear();
-      RBTIndex.clear();
 
       // Insert CVEs into the RBT and fill the side index
       for (auto &cve : cves) {
@@ -155,39 +151,50 @@ int main () {
       cout << "Enter version:  ";
       getline(cin, version);
 
+      string mode;
+      cout << "Mode (tree, trie): " << endl;
+      cin >> mode;
+
       cout << "Searching CVEs" << endl;
-      
-      int foundInTrie = 0;      
-      auto startTimeTrie = chrono::high_resolution_clock::now();
+
+      int count = 0;      
+      auto startTime = chrono::high_resolution_clock::now();
       string cpe = formatCPE(vendor, product, version);
-      CPEData* result = trie.search(cpe);
-      if (result == nullptr) {
-        cout << "CPE not found." << endl;
-        // continue;
-      } else {
-        for (CVEstruct* cve : result->cves) {
-            cve->print();
-          foundInTrie++;
+
+      if (mode == "trie") {
+        CPEData* result = trie.search(cpe);
+        if (result == nullptr) {
+          cout << "CPE not found." << endl;
+          // continue;
+        } else {
+          for (CVEstruct* cve : result->cves) {
+              cve->print();
+              cout << endl;
+            count++;
+          }
         }
       }
-      auto endTimeTrie = chrono::high_resolution_clock::now();
-      auto durationTrie = chrono::duration_cast<chrono::milliseconds>(endTimeTrie - startTimeTrie).count();
-
-
-      auto startTimeRB = chrono::high_resolution_clock::now();
-      int foundInRBT = 0;
-      //it didn't like result :(
-      Node* res = RBT.search(cpe);
-      if (res != RBT.getNIL()) {
-          for (CVEstruct* cve : res->data->cves) {
-              // if (checkMatch(cve->vendor, vendor) && checkMatch(cve->version, version)) {
-              //     printCVE(*cve, vendor, version);
-              //     foundInRBT++;
-              // }
-              cve->print();
-              foundInRBT++;
-          }
+      
+      else if (mode == "tree") {
+        auto startTimeRB = chrono::high_resolution_clock::now();
+        //it didn't like result :(
+        Node* res = RBT.search(cpe);
+        if (res != RBT.getNIL()) {
+            for (CVEstruct* cve : res->data->cves) {
+                // if (checkMatch(cve->vendor, vendor) && checkMatch(cve->version, version)) {
+                //     printCVE(*cve, vendor, version);
+                //     foundInRBT++;
+                // }
+                cve->print();
+                cout << endl;
+                count++;
+            }
+        }
       }
+      auto endTime = chrono::high_resolution_clock::now();
+      auto duration = chrono::duration_cast<chrono::milliseconds>(endTime - startTime).count();
+
+      
 
     //   for (CVEstruct* cve : result->cves) {
     //     if (!cve || cve->id.empty()) continue;
@@ -214,16 +221,12 @@ int main () {
     //         foundInRBT++;
     //     }  
     // }
-       auto endTimeRB = chrono::high_resolution_clock::now();
-      auto durationRB = chrono::duration_cast<chrono::milliseconds>(endTimeRB - startTimeRB).count();  
-     
-      if (foundInTrie == 0 && foundInRBT == 0) {
+      if (count == 0) {
         cout << "No matching CVEs found" << endl;
       } else {
-        cout << "CVEs found in trie:  " << foundInTrie << endl;
-        cout << "CVEs in rbtree: " << foundInRBT << endl;
-        cout << "Trie time:  " << durationTrie << endl;
-        cout << "Red-Black Tree time:  " << durationRB << endl;
+        // cout << "CVEs found in trie:  " << foundInTrie << endl;
+        // cout << "CVEs in rbtree: " << foundInRBT << endl;
+        cout << "Time:  " << duration << endl;
       }
       
     } else {
