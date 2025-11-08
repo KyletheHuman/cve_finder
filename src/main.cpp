@@ -87,10 +87,10 @@ int main () {
 
       cout << "Building Trie" << endl;
       for (auto &cve :cves) {
-        if (!cve.product.empty()) {
+        //if (!cve.product.empty()) {
           string cpe = cve.cpe();
           trie.insert(cpe, &cve);
-        }
+        //}
       }
       cout << "Trie built" << endl;
 
@@ -101,25 +101,27 @@ int main () {
 
       // Insert CVEs into the RBT and fill the side index
       for (auto &cve : cves) {
-        if (cve.id.empty()) continue;
+        string cpe = cve.cpe();
+          RBT.insert(cpe, &cve);
+        // if (cve.id.empty()) continue;
 
-        // Parse CVE-YYYY-NNNNNN inline (no helpers)
-        string t; t.reserve(cve.id.size());
-        for (unsigned char ch : cve.id) t.push_back(std::toupper(ch));
-        if (t.rfind("CVE-", 0) != 0) continue;
-        size_t dash2 = t.find('-', 4);
-        if (dash2 == string::npos) continue;
+        // // Parse CVE-YYYY-NNNNNN inline (no helpers)
+        // string t; t.reserve(cve.id.size());
+        // for (unsigned char ch : cve.id) t.push_back(std::toupper(ch));
+        // if (t.rfind("CVE-", 0) != 0) continue;
+        // size_t dash2 = t.find('-', 4);
+        // if (dash2 == string::npos) continue;
 
-        int year = 0, num = 0;
-        try {
-          year = stoi(t.substr(4, dash2 - 4));
-          num  = stoi(t.substr(dash2 + 1));
-        } catch (...) { continue; }
-        if (num < 0 || num > 999999) continue;
+        // int year = 0, num = 0;
+        // try {
+        //   year = stoi(t.substr(4, dash2 - 4));
+        //   num  = stoi(t.substr(dash2 + 1));
+        // } catch (...) { continue; }
+        // if (num < 0 || num > 999999) continue;
 
-        int key = year * 1'000'000 + num;
-        RBT.insert(key);
-        RBTIndex[key] = &cve;
+        // int key = year * 1'000'000 + num;
+        // RBT.insert(key);
+        // RBTIndex[key] = &cve;
       }
       
       cout << "Red-Black Tree built" << endl;
@@ -136,8 +138,7 @@ int main () {
       string product;
       string version;
       
-      cout << "Search - leave fields vendor and/or version blank to search for all" << endl;
-      cout << "Note: do not leave product blank" << endl;
+      
       cout << "Enter vendor:  ";
       getline(cin, vendor);
       vendor = cleanInput(vendor);
@@ -166,7 +167,8 @@ int main () {
       //   //   count++;
       //   // }
       // }
-
+      
+      auto startTimeTrie = chrono::high_resolution_clock::now();
       string cpe = formatCPE(vendor, product, version);
       CPEData* result = trie.search(cpe);
       if (result == nullptr) {
@@ -175,8 +177,13 @@ int main () {
                 }
                 for (CVEstruct* cve : result->cves) {
                     cve->print();
+                  count++;
                 }
-      
+      auto endTimeTrie = chrono::high_resolution_clock::now();
+      auto durationTrie = chrono::duration_cast<chrono::milliseconds>(endTimeTrie - startTimeTrie).count();
+
+
+      auto startTimeRB = chrono::high_resolution_clock::now();
       int foundInRBT = 0;
 
       for (CVEstruct* cve : result->cves) {
@@ -204,17 +211,13 @@ int main () {
             foundInRBT++;
         }  
     }
-      
-      auto startTimeTrie = chrono::high_resolution_clock::now();
-      //insert into trie
-      auto endTimeTrie = chrono::high_resolution_clock::now();
-      auto durationTrie = chrono::duration_cast<chrono::milliseconds>(endTimeTrie - startTimeTrie).count();
-
-      auto startTimeRB = chrono::high_resolution_clock::now();
-      //insert into red-black
-      auto endTimeRB = chrono::high_resolution_clock::now();
+       auto endTimeRB = chrono::high_resolution_clock::now();
       auto durationRB = chrono::duration_cast<chrono::milliseconds>(endTimeRB - startTimeRB).count();  
-
+      
+      //insert into trie
+   
+      //insert into red-black
+     
       if (count == 0) {
         cout << "No matching CVEs found" << endl;
       } else {
