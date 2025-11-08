@@ -185,32 +185,41 @@ int main () {
 
       auto startTimeRB = chrono::high_resolution_clock::now();
       int foundInRBT = 0;
+      RedBlackTree::Node* result = RBT.search(cpe);
+      if (result != RBT.getNIL()) {
+          for (CVEstruct* cve : result->cves) {
+              if (checkMatch(cve->vendor, vendor) && checkMatch(cve->version, version)) {
+                  printCVE(*cve, vendor, version);
+                  foundInRBT++;
+              }
+          }
+      }
 
-      for (CVEstruct* cve : result->cves) {
-        if (!cve || cve->id.empty()) continue;
+    //   for (CVEstruct* cve : result->cves) {
+    //     if (!cve || cve->id.empty()) continue;
 
-        string t; t.reserve(cve->id.size());
-        for (unsigned char ch : cve->id) t.push_back(std::toupper(ch));
-        if (t.rfind("CVE-", 0) != 0) continue;
-        size_t dash2 = t.find('-', 4);
-        if (dash2 == string::npos) continue;
+    //     string t; t.reserve(cve->id.size());
+    //     for (unsigned char ch : cve->id) t.push_back(std::toupper(ch));
+    //     if (t.rfind("CVE-", 0) != 0) continue;
+    //     size_t dash2 = t.find('-', 4);
+    //     if (dash2 == string::npos) continue;
 
-        int year = 0, num = 0;
-        try {
-          year = stoi(t.substr(4, dash2 - 4));
-          num  = stoi(t.substr(dash2 + 1));
-        } catch (...) { continue; }
-        if (num < 0 || num > 999999) continue;
+    //     int year = 0, num = 0;
+    //     try {
+    //       year = stoi(t.substr(4, dash2 - 4));
+    //       num  = stoi(t.substr(dash2 + 1));
+    //     } catch (...) { continue; }
+    //     if (num < 0 || num > 999999) continue;
 
-        int key = year * 1'000'000 + num;
+    //     int key = year * 1'000'000 + num;
 
-        Node* hit =RBT.search(key);
-        if (hit != RBT.getNIL()) {
-          auto it = RBTIndex.find(key);
-          if (it == RBTIndex.end() || it->second == cve)
-            foundInRBT++;
-        }  
-    }
+    //     Node* hit =RBT.search(key);
+    //     if (hit != RBT.getNIL()) {
+    //       auto it = RBTIndex.find(key);
+    //       if (it == RBTIndex.end() || it->second == cve)
+    //         foundInRBT++;
+    //     }  
+    // }
        auto endTimeRB = chrono::high_resolution_clock::now();
       auto durationRB = chrono::duration_cast<chrono::milliseconds>(endTimeRB - startTimeRB).count();  
       
@@ -222,6 +231,9 @@ int main () {
         cout << "No matching CVEs found" << endl;
       } else {
         cout << "CVEs found:  " << count << endl;
+        cout << "CVEs in rbt: " << foundInRBT << endl;
+        cout << "Trie time:  " << durationTrie << endl;
+        cout << "Red-Black Tree time:  " << durationRB << endl;
       }
       
     } else {
