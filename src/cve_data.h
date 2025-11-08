@@ -28,6 +28,10 @@ struct CPEData {
             cve->print();
         }
     }
+
+    bool operator<(const CPEData& other) {
+        return this->cpeName < other.cpeName;
+    } 
 };
 
 
