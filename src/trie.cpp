@@ -48,8 +48,7 @@ void Trie::insert(string& cpeName, CVEstruct* data) {
     }
     current->isLeaf = true;
     if (!current->data) {
-            current->data = new CPEData();
-            current->data->cpeName = cpeName;
+            current->data = new CPEData(cpeName);
         }
         current->data->cves.push_back(data);
 }

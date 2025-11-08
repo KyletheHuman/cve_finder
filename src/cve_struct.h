@@ -7,6 +7,7 @@ struct CVEstruct {
   string id;
   string description;
   double cvss3score;
+  string cvssVector;
   string vendor;
   string product;
   string version;

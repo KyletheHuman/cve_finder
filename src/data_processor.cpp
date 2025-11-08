@@ -45,8 +45,10 @@ vector<CVEstruct> loadData() {
     cveEntry.version = cveJson.value("version", "any");
     cves.push_back(cveEntry);
   }
-
-  cout << "Loaded" << cves.size() << "CVE data points" << endl;
+  cves[0].print();
+  
+  cout << cves[0].cpe() << endl;
+  cout << "Loaded " << cves.size() << " CVE data points" << endl;
   return cves;
 }
 
@@ -121,7 +123,7 @@ bool decompressFile(const string &gzipPath, const string &outPath) {
 }
 
 
-vector<CVEstruct> parseJson(const string &jsonPath) { //individual json files
+vector<CVEstruct*> parseJson(const string &jsonPath) { //individual json files
   // vector<CVEstruct> cves;
   // ifstream jsonFile(jsonPath);
 
@@ -193,48 +195,177 @@ vector<CVEstruct> parseJson(const string &jsonPath) { //individual json files
   // }
   // cout << "Parsed: Complete " << jsonPath << endl;
   // return cves;
-   vector<CVEstruct> cves;
+   vector<CVEstruct*> cves;
     ifstream jsonFile(jsonPath);
     json data;
     jsonFile >> data;
     jsonFile.close();
 
-    if (!data.contains("vulnerabilities")) return cves;
+  //   if (!data.contains("vulnerabilities")) return cves;
 
-    for (auto &vuln : data["vulnerabilities"]) {
-        CVEstruct cve;
-        if (vuln.contains("cve")) {
-            auto &cveJson = vuln["cve"];
-            cve.id = cveJson["id"].get<string>();
-            if (cveJson.contains("descriptions")) {
-                for (auto &desc : cveJson["descriptions"]) {
-                    if (desc.value("lang", "") == "en") {
-                        cve.description = desc.value("value", "");
-                        break;
-                    }
-                }
-            }
-        }
+  //   for (auto &vuln : data["vulnerabilities"]) {
+  //       CVEstruct* cve = new CVEstruct();
+  //       if (vuln.contains("cve")) {
+  //           auto &cveJson = vuln["cve"];
+  //           cve->id = cveJson["id"].get<string>();
+  //           if (cveJson.contains("descriptions")) {
+  //               for (auto &desc : cveJson["descriptions"]) {
+  //                   if (desc.value("lang", "") == "en") {
+  //                       cve->description = desc.value("value", "");
+  //                       break;
+  //                   }
+  //               }
+  //           }
+  //           if (cveJson.contains("cvssMetricV30")) {
+  //             auto& cvss = cveJson["cvssMetricV30"];
+  //             if (cvss.contains("cvssData")) {
+  //               cve->cvssVector = cvss["vectorString"];
+  //               cve->cvss3score = cvss["baseScore"];
+  //             }
+  //           }
 
-        // You can add CVSS parsing and vendor/product logic here
-        cves.push_back(cve);
-    }
+  //           if (cveJson.contains("configurations")) {
+  //             auto& config = cveJson["configurations"];
+  //             if (config.contains("nodes")) {
+  //               auto& nodes = config["nodes"];
+  //               for (auto& cpeMatch : nodes["cpeMatch"]) {
+  //                 // Extract the criteria string (CPE 2.3 URI)
+  //                 string fullCPE = cpeMatch.value("criteria", "");
 
-    cout << "Parsed: Complete " << jsonPath << " (" << cves.size() << " CVEs)" << endl;
-    return cves;
+  //                 // Example:
+  //                 //   cpe:2.3:o:google:android:12.0:*:*:*:*:*:*:*
+  //                 //
+  //                 // We split on ':' and take:
+  //                 //   [3] vendor
+  //                 //   [4] product
+  //                 //   [5] version
+
+  //                 vector<string> parts;
+  //                 string cur;
+  //                 for (char ch : fullCPE) {
+  //                     if (ch == ':') {
+  //                         parts.push_back(cur);
+  //                         cur.clear();
+  //                     } else {
+  //                         cur.push_back(ch);
+  //                     }
+  //                 }
+  //                 parts.push_back(cur);
+
+  //                 if (parts.size() >= 6) {
+  //                     string vendor  = parts[3];
+  //                     string product = parts[4];
+  //                     string version = parts[5];
+
+  //                     // Store inside your CVE struct however you track multiple CPEs
+  //                     cve->affectedVendors.push_back(vendor);
+  //                     cve->affectedProducts.push_back(product);
+  //                     cve->affectedVersions.push_back(version);
+  //                 }
+  //               }
+  //             }
+  //           }
+  //       }
+
+  //       // You can add CVSS parsing and vendor/product logic here
+  //       cves.push_back(cve);
+  //   }
+  if (!data.contains("vulnerabilities")) return cves;
+
+  for (auto &vuln : data["vulnerabilities"]) {
+      if (!vuln.contains("cve")) continue;
+
+      auto &cveJson = vuln["cve"];
+
+      // shared CVE metadata
+      string id = cveJson.value("id", "");
+      string description = "";
+      double cvssScore = 0.0;
+      string cvssVector = "";
+
+      // description
+      if (cveJson.contains("descriptions")) {
+          for (auto &desc : cveJson["descriptions"]) {
+              if (desc.value("lang", "") == "en") {
+                  description = desc.value("value", "");
+                  break;
+              }
+          }
+      }
+
+      // CVSS 3.0 (you can add V31 similarly)
+      if (cveJson.contains("cvssMetricV30")) {
+          auto &cvssList = cveJson["cvssMetricV30"];
+          if (!cvssList.empty() && cvssList[0].contains("cvssData")) {
+              auto &cvssData = cvssList[0]["cvssData"];
+              cvssVector = cvssData.value("vectorString", "");
+              cvssScore  = cvssData.value("baseScore", 0.0);
+          }
+      }
+
+      // Now parse configurations
+      if (!cveJson.contains("configurations")) continue;
+
+      auto &configs = cveJson["configurations"];
+
+      for (auto &config : configs) {
+          if (!config.contains("nodes")) continue;
+
+          for (auto &node : config["nodes"]) {
+              if (!node.contains("cpeMatch")) continue;
+
+              for (auto &cpeMatch : node["cpeMatch"]) {
+                  if (!cpeMatch.contains("criteria")) continue;
+
+                  string fullCPE = cpeMatch["criteria"];
+
+                  // Parse cpe:2.3:part:vendor:product:version:...
+                  vector<string> fields;
+                  {
+                      string temp;
+                      stringstream ss(fullCPE);
+                      while (getline(ss, temp, ':')) {
+                          fields.push_back(temp);
+                      }
+                  }
+                  if (fields.size() < 6) continue;
+
+                  string vendor  = fields[3];
+                  string product = fields[4];
+                  string version = fields[5];
+
+                  // Create INDIVIDUAL CVEstruct for this CPE
+                  CVEstruct* cve = new CVEstruct();
+                  cve->id = id;
+                  cve->description = description;
+                  cve->vendor = vendor;
+                  cve->product = product;
+                  cve->version = version;
+                  cve->cvss3score = cvssScore;
+                  cve->cvssVector = cvssVector;
+
+                  cves.push_back(cve);
+              }
+          }
+      }
+  }
+
+  cout << "Parsed: Complete " << jsonPath << " (" << cves.size() << " CVEs)" << endl;
+  return cves;
 }
 
 
-void saveData(const vector<CVEstruct> &cves, const string &outPath) {
+void saveData(const vector<CVEstruct*> &cves, const string &outPath) {
   json combinedJson;
   for (const auto &cve : cves) {
     combinedJson.push_back({
-      {"id", cve.id},
-      {"description", cve.description},
-      {"cvss3score", cve.cvss3score},
-      {"vendor", cve.vendor},
-      {"product", cve.product},
-      {"version", cve.version}
+      {"id", cve->id},
+      {"description", cve->description},
+      {"cvss3score", cve->cvss3score},
+      {"cvssVector", cve->cvssVector},
+      {"vendor", cve->vendor},
+      {"product", cve->product},
+      {"version", cve->version}
       });
   }
 
@@ -267,7 +398,7 @@ void updateData() {
   // saveData(cves, "data/cve_data.json");
   // curl_global_cleanup();
   // cout << "Update completed. CVE data points gathered: " << cves.size() << endl;
-  vector<CVEstruct> allCves;
+  vector<CVEstruct*> allCves;
 
     curl_global_init(CURL_GLOBAL_DEFAULT);
 
@@ -300,13 +431,13 @@ void updateData() {
         string jsonPath = "data/nvdcve-2.0-" + to_string(year) + ".json";
 
       try {
-          vector<CVEstruct> yearCves = parseJson(jsonPath);
+          vector<CVEstruct*> yearCves = parseJson(jsonPath);
 
           if (!yearCves.empty()) {
-              cout << yearCves[0].product << endl;
+              cout << yearCves[0]->product << endl;
           }
 
-          for (const CVEstruct &cve : yearCves) {
+          for (CVEstruct* cve : yearCves) {
               allCves.push_back(cve);
           }
 

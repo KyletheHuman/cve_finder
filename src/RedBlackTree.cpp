@@ -111,46 +111,100 @@ void RedBlackTree::fixInsert(Node* k) {
     root->color = Color::BLACK;
 }
 
-void RedBlackTree::insert(CPEData* data) {
-    Node* z = new Node(data);
-    z->left = z->right = NIL;
+void RedBlackTree::insert(string& cpeName, CVEstruct* cve) {
+    // root = insertHelper(this->root, cpeName, cve);
+    Node* current = root;
+    Node* parent = nullptr;
 
-    Node* y = nullptr;
-    Node* x = root;
+    while (current != NIL) {
+        parent= current;
 
-    // BST insert
-    while (x != NIL) {
-        y = x;
-        x = (z->data < x->data) ? x->left : x->right;
-    }
-    z->parent = y;
+        if (cpeName == current->data->cpeName) {
+            current->data->cves.push_back(cve);
+        }
 
-    if (y == nullptr) {
-        root = z;
-    } else if (z->data < y->data) {
-        y->left = z;
-    } else {
-        y->right = z;
+        if (cpeName < current->data->cpeName) {
+            current = current->left;
+        } else {
+            current = current->right;
+        }
     }
+    CPEData* cpe = new CPEData(cpeName);
+    cpe->cves.push_back(cve);
 
-    // fix-up
-    if (z->parent == nullptr) {
-        z->color = Color::BLACK; // root must be black
-        return;
+    Node* newNode = new Node(cpe);
+    newNode->left = newNode->right = NIL;
+    newNode->parent = parent;
+    newNode->color = Color::RED;
+
+    if (parent == nullptr || parent == NIL) {
+        root = newNode;
+        newNode->parent = nullptr;
     }
-    if (z->parent->parent == nullptr) {
-        return; // parent is root, red parent w/ black root is fine
+    else if (cpeName < parent->data->cpeName) {
+        parent->left = newNode;
     }
-    fixInsert(z);
+    else {
+        parent->right = newNode;
+    }
+    fixInsert(newNode);
 }
 
-Node* RedBlackTree::searchHelper(Node* node, CPEData* data) const {
-    if (node == NIL || node->data == data) return node;
-    return (data < node->data) ? searchHelper(node->left, data)
+// Node* RedBlackTree::insertHelper(Node* node, string &cpeName, CVEstruct* cve) {
+//     // Node* z = new Node(data);
+//     // z->left = z->right = NIL;
+
+//     // Node* y = nullptr;
+//     // Node* x = root;
+
+//     // // BST insert
+//     // while (x != NIL) {
+//     //     y = x;
+//     //     x = (z->data < x->data) ? x->left : x->right;
+//     // }
+//     // z->parent = y;
+
+//     // if (y == nullptr) {
+//     //     root = z;
+//     // } else if (z->data < y->data) {
+//     //     y->left = z;
+//     // } else {
+//     //     y->right = z;
+//     // }
+
+//     // // fix-up
+//     // if (z->parent == nullptr) {
+//     //     z->color = Color::BLACK; // root must be black
+//     //     return;
+//     // }
+//     // if (z->parent->parent == nullptr) {
+//     //     return; // parent is root, red parent w/ black root is fine
+//     // }
+//     if (!node) {
+//         CPEData* cpe = new CPEData(cpeName);
+//         return new Node(cpe);
+//     }
+
+//     if (node->data->cpeName < cpeName) {
+//         node->left = insertHelper(node->left, cpeName, cve);
+//     }
+//     else if (node->data->cpeName > cpeName) {
+//         node->right = insertHelper(node->right, cpeName, cve);
+//     }
+//     else if (node->data->cpeName == cpeName) {
+//         node->data->cves.push_back(cve);
+//     }
+//     fixInsert(node);
+//     return node;
+// }
+
+Node* RedBlackTree::searchHelper(Node* node, string data) const {
+    if (node == NIL || node->data->cpeName == data) return node;
+    return (data < node->data->cpeName) ? searchHelper(node->left, data)
                                : searchHelper(node->right, data);
 }
 
-Node* RedBlackTree::search(CPEData* data) const {
+Node* RedBlackTree::search(string data) const {
     return searchHelper(root, data);
 }
 

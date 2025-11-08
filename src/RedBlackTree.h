@@ -28,8 +28,8 @@ public:
     RedBlackTree(RedBlackTree&&)                 = delete;
     RedBlackTree& operator=(RedBlackTree&&)      = delete;
 
-    void insert(CPEData* data);
-    Node* search(CPEData* data) const;  // returns NIL if not found
+    void insert(string& cpeName, CVEstruct* cve);
+    Node* search(string cpe) const;  // returns NIL if not found
 
     void inorder() const;
     void clear();                                // remove all nodes (keeps sentinel)
@@ -41,6 +41,10 @@ public:
     bool validate(std::string* errMsg = nullptr) const;
     std::pair<int, int> countColors() const; // {reds, blacks} (excludes NIL)
 
+    Node* getRoot() {
+        return root;
+    }
+
 private:
     Node* root;
     Node* NIL; // sentinel (always BLACK)
@@ -51,10 +55,11 @@ private:
 
     // fix after insert
     void fixInsert(Node* k);
+    Node* insertHelper(Node* node, string& cpeName, CVEstruct* cve);
 
     // helpers
     void inorderHelper(Node* node) const;
-    Node* searchHelper(Node* node, CPEData* data) const;
+    Node* searchHelper(Node* node, string data) const;
 
     // memory
     void deleteSubtree(Node* node);

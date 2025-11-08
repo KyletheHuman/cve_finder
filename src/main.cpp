@@ -141,7 +141,6 @@ int main () {
       
       cout << "Enter vendor:  ";
       getline(cin, vendor);
-      vendor = cleanInput(vendor);
       
       cout << "Enter product*:  ";
       getline(cin, product);
@@ -152,42 +151,35 @@ int main () {
           getline(cin, product);
         }
       }
-      product = cleanInput(product);
       
       cout << "Enter version:  ";
       getline(cin, version);
-      version = cleanInput(version);
 
       cout << "Searching CVEs" << endl;
-      int count = 0;
-      //base search for now
-      // for (const auto &cve : cves) {
-      //   // if (checkMatch(cve.product, product) && checkMatch(cve.vendor, vendor) && checkMatch(cve.version, version)) {
-      //   //   printCVE(cve, vendor, version);
-      //   //   count++;
-      //   // }
-      // }
       
+      int count = 0;      
       auto startTimeTrie = chrono::high_resolution_clock::now();
       string cpe = formatCPE(vendor, product, version);
       CPEData* result = trie.search(cpe);
       if (result == nullptr) {
-                    cout << "CPE not found." << endl;
-                    continue;
-                }
-                for (CVEstruct* cve : result->cves) {
-                    cve->print();
-                  count++;
-                }
+        cout << "CPE not found." << endl;
+        // continue;
+      } else {
+        for (CVEstruct* cve : result->cves) {
+            cve->print();
+          count++;
+        }
+      }
       auto endTimeTrie = chrono::high_resolution_clock::now();
       auto durationTrie = chrono::duration_cast<chrono::milliseconds>(endTimeTrie - startTimeTrie).count();
 
 
       auto startTimeRB = chrono::high_resolution_clock::now();
       int foundInRBT = 0;
-      RedBlackTree::Node* result = RBT.search(cpe);
-      if (result != RBT.getNIL()) {
-          for (CVEstruct* cve : result->cves) {
+      //it didn't like result :(
+      Node* res = RBT.search(cpe);
+      if (res != RBT.getNIL()) {
+          for (CVEstruct* cve : res->data->cves) {
               if (checkMatch(cve->vendor, vendor) && checkMatch(cve->version, version)) {
                   printCVE(*cve, vendor, version);
                   foundInRBT++;

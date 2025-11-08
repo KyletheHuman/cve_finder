@@ -10,7 +10,7 @@ vector<CVEstruct> loadData();
 void updateData();
 bool downloadFile(const string &url, const string &outPath);
 bool decompressFile(const string &gzipPath, const string &outPath);
-vector<CVEstruct> parseJson(const string &jsonPath);
+vector<CVEstruct*> parseJson(const string &jsonPath);
 void saveData(const vector<CVEstruct> &cves, const string &outPath);
 
 #endif

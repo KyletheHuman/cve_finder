@@ -23,6 +23,10 @@ struct CPEData {
     string cpeName;
     vector<CVEstruct*> cves;
 
+    CPEData(string cpeName) {
+        this->cpeName = cpeName;
+    }
+
     void print() {
         for (CVEstruct* cve : cves) {
             cve->print();
