@@ -9,7 +9,8 @@ Steps to get started:
 
 -download 2010-2025 GZ files (the api thought we were trying to ddos them so we had to do it manually)
 
--unzip them into the build/data
+-unzip them into build/data
+
 
 
 
